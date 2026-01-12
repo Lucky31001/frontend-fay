@@ -24,8 +24,9 @@ export default function LoginScreen() {
       setLoading(true);
       const payload = { username, password } as any;
       const data = await login(payload);
-      if (data && data.access) {
-        await signIn(data.access, data.refresh_token);
+      if (data && data.access_token) {
+        await signIn(data.access_token, data.refresh_token);
+        router.push('/(tabs)/home');
       }
     } catch (err: any) {
       Alert.alert('Erreur', err?.message || 'Impossible de se connecter');

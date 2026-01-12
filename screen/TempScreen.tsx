@@ -1,15 +1,15 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import {storage} from "@/utils/storage";
+import { storage } from '@/utils/storage';
 
 export default function TempScreen() {
-    const router = useRouter();
+  const router = useRouter();
 
   const logout = async () => {
     try {
-        storage.removeItem('access_token');
-        storage.removeItem('refresh_token');
+      storage.removeItem('access_token');
+      storage.removeItem('refresh_token');
       Alert.alert('Déconnecté');
 
       router.replace('/login');

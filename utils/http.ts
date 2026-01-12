@@ -7,10 +7,10 @@ export const requestGet = (
 ) => request({ method: 'get', url, params, headers });
 
 export const requestPost = (url: string, data?: any, headers?: Record<string, any>): Promise<any> =>
-    request({ method: 'post', url, data, headers });
+  request({ method: 'post', url, data, headers });
 
 export const requestPut = (url: string, data?: any, headers?: Record<string, any>): Promise<any> =>
-    request({ method: 'put', url, data, headers });
+  request({ method: 'put', url, data, headers });
 
 export const requestDelete = (
   url: string,

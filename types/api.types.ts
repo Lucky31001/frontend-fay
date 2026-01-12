@@ -23,8 +23,8 @@ export interface LoginResponse {
 }
 
 export interface RegisterResponse {
-    access_token: string;
-    refresh_token?: string;
-    role?: string;
-    [key: string]: any;
+  access_token: string;
+  refresh_token?: string;
+  role?: string;
+  [key: string]: any;
 }

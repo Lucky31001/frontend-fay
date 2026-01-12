@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState, ReactNode } from 'react';
-import {storage} from "@/utils/storage";
+import { storage } from '@/utils/storage';
 
 type AuthContextType = {
   token: string | null;
@@ -22,27 +22,34 @@ function decodeJwtPayload(token: string): any | null {
     const parts = token.split('.');
     if (parts.length < 2) return null;
     const payload = parts[1];
-    const json = Buffer.from(payload.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString('utf8');
+    const json = Buffer.from(payload.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString(
+      'utf8',
+    );
     return JSON.parse(json);
   } catch (err) {
     return null;
   }
 }
 
-function isJwtExpired(token: string): boolean {
+function isJwtExpired(token: string | null): boolean {
+  if (!token) return true;
+
   try {
     const decoded = decodeJwtPayload(token);
-    if (!decoded || !decoded.exp) return false;
+    if (!decoded || !decoded.exp) return true;
+
     const now = Math.floor(Date.now() / 1000);
     return decoded.exp < now;
   } catch (err) {
-    return false;
+    return true;
   }
 }
+
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -62,18 +69,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = async (t: string, refresh?: string) => {
-    storage.setItem('access_token', t);
-    if (refresh) storage.setItem('refresh_token', refresh);
+    await storage.setItem('access_token', t);
+    if (refresh) await storage.setItem('refresh_token', refresh);
     setToken(t);
+    setIsAuthenticated(true);
+    console.log('Signed in, token set');
   };
 
   const signOut = async () => {
-    storage.removeItem('access_token');
-    storage.removeItem('refresh_token');
+    await storage.removeItem('access_token');
+    await storage.removeItem('refresh_token');
     setToken(null);
+    setIsAuthenticated(false);
   };
 
-  const isAuthenticated = !!token && !isJwtExpired(token);
+  useEffect(() => {
+    setIsAuthenticated(!!token && !isJwtExpired(token));
+  }, [token]);
 
   return (
     <AuthContext.Provider value={{ token, loading, signIn, signOut, isAuthenticated }}>

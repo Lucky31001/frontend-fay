@@ -1,6 +1,6 @@
-import RegisterScreen from "@/screen/RegisterScreen";
-import LoginScreen from "@/screen/LoginScreen";
+import RegisterScreen from '@/screen/RegisterScreen';
+import LoginScreen from '@/screen/LoginScreen';
 
-export default function LoginPage(){
-    return LoginScreen();
+export default function LoginPage() {
+  return LoginScreen();
 }
