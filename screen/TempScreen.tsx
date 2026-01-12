@@ -1,16 +1,15 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, Alert } from 'react-native';
-import * as SecureStore from 'expo-secure-store';
 import { useRouter } from 'expo-router';
+import {storage} from "@/utils/storage";
 
 export default function TempScreen() {
     const router = useRouter();
 
   const logout = async () => {
     try {
-      console.log(SecureStore.getItemAsync("access_token"));
-        await SecureStore.deleteItemAsync('access_token');
-        await SecureStore.deleteItemAsync('refresh_token');
+        storage.removeItem('access_token');
+        storage.removeItem('refresh_token');
       Alert.alert('Déconnecté');
 
       router.replace('/login');

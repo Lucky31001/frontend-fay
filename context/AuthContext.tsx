@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState, ReactNode } from 'react';
-import * as SecureStore from 'expo-secure-store';
+import {storage} from "@/utils/storage";
 
 type AuthContextType = {
   token: string | null;
@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     (async () => {
       try {
-        const t = await SecureStore.getItemAsync('access_token');
+        const t = await storage.getItem('access_token');
         if (t && !isJwtExpired(t)) {
           setToken(t);
         } else {
@@ -62,14 +62,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signIn = async (t: string, refresh?: string) => {
-    await SecureStore.setItemAsync('access_token', t);
-    if (refresh) await SecureStore.setItemAsync('refresh_token', refresh);
+    storage.setItem('access_token', t);
+    if (refresh) storage.setItem('refresh_token', refresh);
     setToken(t);
   };
 
   const signOut = async () => {
-    await SecureStore.deleteItemAsync('access_token');
-    await SecureStore.deleteItemAsync('refresh_token');
+    storage.removeItem('access_token');
+    storage.removeItem('refresh_token');
     setToken(null);
   };
 

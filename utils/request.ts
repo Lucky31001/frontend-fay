@@ -8,42 +8,12 @@ export interface RequestOptions {
   headers?: Record<string, any>;
 }
 
-export async function request({
-  method,
-  url,
-  data = null,
-  params = null,
-  headers = {},
-}: RequestOptions) {
+export async function request({ method, url, data = null, params = null, headers = {} }: RequestOptions): Promise<any> {
   try {
-    const response = await client({
-      method,
-      url,
-      data,
-      params,
-      headers,
-    });
-
+    const response = await client({ method, url, data, params, headers });
+    return response.data;
   } catch (err: any) {
-    const error = err as any;
-    if (error.response) {
-      throw {
-        status: error.response.status,
-        data: error.response.data,
-        message: error.response.data?.detail || 'Erreur serveur',
-      };
-    }
-
-    if (error.request) {
-      throw {
-        status: null,
-        message: 'Serveur injoignable',
-      };
-    }
-
-    throw {
-      status: null,
-      message: error.message || String(error),
-    };
+    const message = err?.response?.data?.detail ?? err?.response?.data ?? err?.message ?? 'Erreur réseau';
+    throw new Error(typeof message === 'string' ? message : JSON.stringify(message));
   }
 }

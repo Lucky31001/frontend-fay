@@ -48,8 +48,9 @@ export default function RegisterScreen() {
         try {
             setLoading(true);
             const data = await register(payload);
-            if (data && data.access) {
-                await signIn(data.access, data.refresh_token);
+            console.log("Register response:", data);
+            if (data && data.access_token) {
+                await signIn(data.access_token, data.refresh_token);
 
 
             } else {
