@@ -23,7 +23,7 @@ jobs:
         run: npm ci
 
       - name: Expo doctor
-        run: npx expo doctor
+        run: npx expo-doctor
 
       - name: Lint
         run: npm run lint
