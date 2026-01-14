@@ -72,7 +72,7 @@ export default function LoginScreen() {
         </Text>
 
         <Text style={{ marginBottom: 6, color: '#374151', fontWeight: '500' }}>
-          Nom d'utilisateur
+          Nom d’utilisateur
         </Text>
         <TextInput
           placeholder="Nom d'utilisateur"
@@ -137,7 +137,7 @@ export default function LoginScreen() {
         <View style={{ alignItems: 'center' }}>
           <Text style={{ color: '#6b7280', marginBottom: 8 }}>Pas encore de compte ?</Text>
           <TouchableOpacity onPress={() => router.replace('/')}>
-            <Text style={{ color: '#2563eb', fontWeight: '600' }}>Aller à l'inscription</Text>
+            <Text style={{ color: '#2563eb', fontWeight: '600' }}>Aller à l’inscription</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -26,7 +26,7 @@ function decodeJwtPayload(token: string): any | null {
       'utf8',
     );
     return JSON.parse(json);
-  } catch (err) {
+  } catch {
     return null;
   }
 }
@@ -40,7 +40,7 @@ function isJwtExpired(token: string | null): boolean {
 
     const now = Math.floor(Date.now() / 1000);
     return decoded.exp < now;
-  } catch (err) {
+  } catch {
     return true;
   }
 }
@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else {
           setToken(null);
         }
-      } catch (err) {
+      } catch {
         setToken(null);
       } finally {
         setLoading(false);

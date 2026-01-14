@@ -1,3 +1,5 @@
+/* global jest */
+
 jest.mock('expo', () => ({}));
 jest.mock('expo-constants', () => ({ manifest: {} }));
 jest.mock('expo-secure-store', () => ({
