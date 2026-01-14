@@ -28,3 +28,16 @@ export interface RegisterResponse {
   role?: string;
   [key: string]: any;
 }
+
+
+export interface APIEvent {
+  id: number;
+  name: string;
+  location: string;
+  price: number;
+  link?: string;
+  description?: string;
+  event_type?: string;
+  note?: number;
+  capacity?: number;
+}
