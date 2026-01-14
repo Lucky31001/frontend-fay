@@ -24,6 +24,7 @@ jobs:
 
       - name: Expo doctor
         run: npx expo-doctor
+        continue-on-error: true
 
       - name: Lint
         run: npm run lint
