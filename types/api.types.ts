@@ -29,7 +29,6 @@ export interface RegisterResponse {
   [key: string]: any;
 }
 
-
 export interface APIEvent {
   id: number;
   name: string;

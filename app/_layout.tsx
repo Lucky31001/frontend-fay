@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { AuthProvider, AuthContext } from '@/context/AuthContext';
-import { useRouter , Stack } from 'expo-router';
+import { useRouter, Stack } from 'expo-router';
 
 export default function RootLayout() {
   const { loading, isAuthenticated } = useContext(AuthContext);

@@ -45,7 +45,6 @@ function isJwtExpired(token: string | null): boolean {
   }
 }
 
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
