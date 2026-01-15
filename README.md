@@ -1,50 +1,128 @@
-# Welcome to your Expo app 👋
+# FAY — Application mobile (Expo)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Ce dépôt contient l'application mobile "FAY" développée avec Expo et React Native (router Expo). Ce README donne les instructions essentielles pour installer, lancer et contribuer au projet.
 
-## Get started
+## Prérequis
 
-1. Install dependencies
+- Node.js (14.x+ recommandé)
+- npm
+- Expo CLI est optionnel (nous utilisons `npx expo` dans les scripts)
+- Un émulateur Android/iOS ou l'application Expo Go pour tester sur un appareil
+
+## Installation
+
+1. Installer les dépendances :
 
    ```bash
    npm install
    ```
 
-2. Start the app
+2. Lancer l'application en développement :
 
    ```bash
+   npm start
+   # ou
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+   Pour démarrer directement sur un appareil/émulateur :
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+   ```bash
+   npm run android
+   npm run ios
+   npm run web
+   ```
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Scripts utiles (dans `package.json`)
 
-## Get a fresh project
+- `npm start` — démarre le serveur Expo
+- `npm run android` — démarre Expo et ouvre un appareil Android (émulateur ou appareil connecté)
+- `npm run ios` — démarre Expo et ouvre un simulateur iOS (macOS seulement)
+- `npm run web` — lance la version web
+- `npm test` — lance la suite de tests (Jest)
+- `npm run test:watch` — exécute les tests en mode watch
+- `npm run lint` — exécute ESLint sur le projet
+- `npm run format` — formate le code avec Prettier
+- `npm run reset-project` — script utilitaire fourni qui réinitialise la structure (fourni par le template)
 
-When you're ready, run:
+## Structure du projet (points principaux)
+
+- `app/` — code des écrans et routes (file-based routing d'Expo Router)
+  - `index.tsx` — point d'entrée des écrans
+  - `login.tsx`, `RegisterScreen`, etc. — écrans principaux
+- `components/` — composants réutilisables
+- `screen/` — écrans non-routés (utilisés par l'app)
+- `services/` — appels réseau / services (ex : `auth.service.ts`, `event.service.ts`)
+- `context/` — context React (ex : `AuthContext.tsx`)
+- `utils/` — utilitaires et client HTTP
+- `assets/` — images et ressources statiques
+- `types/` — types TypeScript partagés
+
+  Remarque : le projet utilise TypeScript. Le fichier `tsconfig.json` est fourni.
+
+## Configuration et variables d'environnement
+
+Les appels réseau utilisent les services dans `services/`. Si l'application consomme une API distante, définissez l'URL de l'API dans `constant/urls.ts` ou via une approche d'environnement si vous préférez (ex : `app.config.js`, ou fichiers `.env` + `babel-plugin-inline-dotenv`).
+
+## Tests
+
+Ce projet utilise Jest et `@testing-library/react-native`. Pour lancer les tests :
 
 ```bash
-npm run reset-project
+npm test
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Pour lancer un seul test en mode watch :
 
-## Learn more
+```bash
+npm run test:watch
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+## Linting & Format
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+- Linter : ESLint
+- Formatteur : Prettier
 
-## Join the community
+Pour vérifier le lint :
 
-Join our community of developers creating universal apps.
+```bash
+npm run lint
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Pour formater le code :
+
+```bash
+npm run format
+```
+
+## Développement & bonnes pratiques
+
+- Respecter les conventions TypeScript et garder les composants petits et testables.
+- Placer la logique réseau dans `services/` et l'état global dans `context/`.
+- Ajouter des tests pour les composants critiques (écrans d'authentification, flux d'événement, etc.).
+
+## Déploiement
+
+Pour publier en production, créez un build Expo (via EAS ou `expo build` selon votre configuration). Ce README ne couvre pas la configuration EAS ; si nécessaire, je peux ajouter une section dédiée.
+
+## Contribution
+
+1. Forker le dépôt et créer une branche feature/bugfix
+2. Ouvrir une Pull Request décrivant les changements
+3. Ajouter des tests pour les modifications critiques
+
+## Ressources
+
+- Expo : https://expo.dev
+- Expo Router : https://expo.dev/router
+- React Native : https://reactnative.dev
+
+---
+
+Si vous voulez, je peux :
+
+- Ajouter une section pour la configuration EAS (builds) si vous utilisez EAS
+- Générer un fichier `.env.example` et une petite section expliquant les variables d'API
+- Traduire certaines parties du code ou ajouter un guide de contribution plus détaillé
+
+Dites-moi ce que vous préférez.

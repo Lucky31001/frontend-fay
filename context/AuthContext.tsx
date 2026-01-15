@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useState, ReactNode } from 'react';
+import { useRouter } from 'expo-router';
 import { storage } from '@/utils/storage';
 
 type AuthContextType = {
@@ -19,33 +20,35 @@ export const AuthContext = createContext<AuthContextType>({
 
 function decodeJwtPayload(token: string): any | null {
   try {
-    const parts = token.split('.');
-    if (parts.length < 2) return null;
-    const payload = parts[1];
-    const json = Buffer.from(payload.replace(/-/g, '+').replace(/_/g, '/'), 'base64').toString(
-      'utf8',
+    const payload = token.split('.')[1];
+    if (!payload) return null;
+
+    const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const json = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
     );
+
     return JSON.parse(json);
   } catch {
     return null;
   }
 }
 
-function isJwtExpired(token: string | null): boolean {
+export const isJwtExpired = (token: string | null, marginSeconds = 60): boolean => {
   if (!token) return true;
 
-  try {
-    const decoded = decodeJwtPayload(token);
-    if (!decoded || !decoded.exp) return true;
+  const decoded = decodeJwtPayload(token);
+  if (!decoded?.exp) return true;
 
-    const now = Math.floor(Date.now() / 1000);
-    return decoded.exp < now;
-  } catch {
-    return true;
-  }
-}
+  const now = Math.floor(Date.now() / 1000);
+  return decoded.exp <= now + marginSeconds;
+};
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+    const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -56,8 +59,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const t = await storage.getItem('access_token');
         if (t && !isJwtExpired(t)) {
           setToken(t);
+          setIsAuthenticated(true);
+          router.push('/(tabs)/home');
         } else {
           setToken(null);
+          setIsAuthenticated(false);
         }
       } catch {
         setToken(null);
