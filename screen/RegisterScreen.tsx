@@ -105,7 +105,7 @@ export default function RegisterScreen() {
         </Text>
 
         <Text style={{ marginBottom: 6, color: '#374151', fontWeight: '500' }}>
-          Nom d'utilisateur
+          Nom d	’utilisateur
         </Text>
         <TextInput
           placeholder="Nom d'utilisateur"
@@ -192,7 +192,7 @@ export default function RegisterScreen() {
           })}
         >
           <Text style={{ color: '#fff', fontWeight: '600' }}>
-            {loading ? 'En cours...' : "S'inscrire"}
+            {loading ? 'En cours...' : 'S\u2019inscrire'}
           </Text>
         </Pressable>
 
