@@ -37,7 +37,7 @@ export default function CreateEventScreen() {
       const data = await create_event(payload);
       if (data) {
         Alert.alert('Succès', "L'événement a été créé avec succès");
-        router.push('/(tabs)/event_list');
+        router.push('/(tabs)/event');
       }
     } catch (err: any) {
       setLoading(false);
