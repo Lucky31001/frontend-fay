@@ -18,7 +18,7 @@ export default function EventListScreen() {
     <View style={{ padding: 12, marginBottom: 12, borderWidth: 1, borderRadius: 6 }}>
       <Text style={{ fontWeight: 'bold' }}>{item.name}</Text>
       <Text>{item.location}</Text>
-      <Text>{item.price} €</Text>
+      <Text>{item.price}€</Text>
     </View>
   );
 
