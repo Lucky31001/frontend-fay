@@ -3,7 +3,7 @@ import { storage } from '@/utils/storage';
 import { API_URL } from '@/constant/urls';
 
 const client = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: 'http://10.57.33.91:8000',
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
