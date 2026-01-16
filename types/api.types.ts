@@ -40,3 +40,15 @@ export interface APIEvent {
   note?: number;
   capacity?: number;
 }
+
+export interface APICreateEvent {
+  id: number;
+  name: string;
+  location: string;
+  price: number;
+  link?: string;
+  description?: string;
+  event_type?: string;
+  note?: number;
+  capacity?: number;
+}
