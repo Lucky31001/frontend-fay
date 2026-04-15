@@ -19,7 +19,7 @@ export default function CreateEventScreen() {
       Alert.alert('Erreur', 'Veuillez remplir tous les champs');
       return;
     }
-    console.log("eventType : ", eventType)
+    console.log('eventType : ', eventType);
 
     const payload = {
       name,

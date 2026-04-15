@@ -1,46 +1,45 @@
 import { List_event } from '@/services/event.service';
 import React, { useEffect, useState } from 'react';
-import MapView, {Marker} from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { StyleSheet, View, Image, Text, ActivityIndicator } from 'react-native';
 import type { APIEvent } from '@/types/api.types';
-import * as Location from "expo-location";
-
+import * as Location from 'expo-location';
 
 export default function MapScreen() {
   const [events, setEvents] = useState<APIEvent[]>([]);
   const [location, setLocation] = useState<Location.LocationObjectCoords>();
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-      const fetchEvent = async () => {
-        const data = await List_event()
-        setEvents(data);
-      };
-      fetchEvent();
-    }, []);
+    const fetchEvent = async () => {
+      const data = await List_event();
+      setEvents(data);
+    };
+    fetchEvent();
+  }, []);
 
+  useEffect(() => {
+    (async () => {
+      // Ask for location permission
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        setErrorMsg('Permission refusée');
+        return;
+      }
 
-    useEffect(() => {
-      (async () => {
-        // Ask for location permission
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          setErrorMsg("Permission refusée");
-          return;
-        }
-
-        // Get user geolocation in real time
-        Location.watchPositionAsync(
-          { accuracy: Location.Accuracy.High, distanceInterval: 5 },
-          (loc) => setLocation(loc.coords));
-      })(); 
-    }, []);
+      // Get user geolocation in real time
+      Location.watchPositionAsync(
+        { accuracy: Location.Accuracy.High, distanceInterval: 5 },
+        (loc) => setLocation(loc.coords),
+      );
+    })();
+  }, []);
 
   if (errorMsg) {
     return (
       <View style={styles.center}>
         <Text>{errorMsg}</Text>
-      </View> 
+      </View>
     );
   }
 
@@ -54,8 +53,8 @@ export default function MapScreen() {
 
   return (
     <View style={styles.map}>
-      <MapView 
-        style={styles.map} 
+      <MapView
+        style={styles.map}
         initialRegion={{
           latitude: location.latitude,
           longitude: location.longitude,
@@ -66,7 +65,7 @@ export default function MapScreen() {
         <Marker
           coordinate={{
             latitude: location.latitude,
-            longitude: location.longitude
+            longitude: location.longitude,
           }}
           anchor={{ x: 0.5, y: 1 }}
         >
@@ -87,7 +86,7 @@ const styles = StyleSheet.create({
   },
   center: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

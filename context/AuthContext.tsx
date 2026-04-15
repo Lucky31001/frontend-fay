@@ -27,8 +27,8 @@ function decodeJwtPayload(token: string): any | null {
     const json = decodeURIComponent(
       atob(base64)
         .split('')
-        .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-        .join('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join(''),
     );
 
     return JSON.parse(json);
@@ -48,7 +48,7 @@ export const isJwtExpired = (token: string | null, marginSeconds = 60): boolean 
 };
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-    const router = useRouter();
+  const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);

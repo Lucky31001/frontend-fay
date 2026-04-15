@@ -9,7 +9,7 @@ export default function TabLayout() {
         screenOptions={{
           tabBarActiveTintColor: '#ffd33d',
         }}
-        >
+      >
         <Tabs.Screen
           name="index"
           options={{
@@ -18,20 +18,16 @@ export default function TabLayout() {
               <Ionicons name={focused ? 'home-sharp' : 'home-outline'} color={color} size={24} />
             ),
           }}
-          />
-        <Tabs.Screen
-          name="event_list"
-          options={{ title: 'Événements',}}
-          />
+        />
+        <Tabs.Screen name="event_list" options={{ title: 'Événements' }} />
         <Tabs.Screen
           name="create_event"
           options={{
             href: null,
-            
           }}
-          />
+        />
+        <Tabs.Screen name="maps" options={{ title: 'Maps' }} />
       </Tabs>
-      
     </>
   );
 }

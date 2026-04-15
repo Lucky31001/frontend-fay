@@ -1,5 +1,5 @@
-    import CreateEventScreen from '@/screen/CreateEventScreen';
+import CreateEventScreen from '@/screen/CreateEventScreen';
 
-    export default function CreateEventPage() {
-    return CreateEventScreen();
-    }
+export default function CreateEventPage() {
+  return CreateEventScreen();
+}
