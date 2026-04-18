@@ -122,4 +122,4 @@ Pour publier en production, créez un build Expo (via EAS ou `expo build` selon 
 - ESLint : https://eslint.org
 - Prettier : https://prettier.io
 - Axios : https://axios-http.com
-- Material Design Icons : https://pictogrammers.com/library/mdi/
+- Ionicons : https://ionic.io/ionicons

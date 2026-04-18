@@ -1,10 +1,12 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeContext } from '@/context/ThemeContext';
 import { useTheme, IconButton, Menu } from 'react-native-paper';
 import { useSegments, useRouter } from 'expo-router';
 import { AuthContext } from '@/context/AuthContext';
+import GradientButton from '@/components/GradientButton';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function Header() {
   const { isDark, toggle } = useContext(ThemeContext);
@@ -18,24 +20,43 @@ export default function Header() {
 
   return (
     <SafeAreaView
-      style={[styles.container, { backgroundColor: paperTheme.colors.background }]}
+      style={{ width: '100%', backgroundColor: paperTheme.colors.background }}
       edges={['top']}
     >
-      <View style={[styles.inner, { borderBottomColor: paperTheme.colors.outline }]}>
-        <View style={styles.left}>
-          <IconButton
-            icon={'alpha-f'}
-            style={[
-              styles.squareButton,
-              {
-                borderColor: paperTheme.colors.outline,
-                backgroundColor: paperTheme.colors.surface,
-              },
-            ]}
-          />
-          <Text style={[styles.title, { color: paperTheme.colors.onSurface }]}>Fay</Text>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingHorizontal: 16,
+          paddingVertical: 10,
+          borderBottomWidth: 1,
+          borderBottomColor: paperTheme.colors.outlineVariant,
+        }}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center', width: 80 }}>
+          <GradientButton
+            onClick={() => router.push('/(tabs)/agenda')}
+            style={{
+              width: 36,
+              height: 36,
+              marginRight: 8,
+              marginBottom: 5,
+            }}
+            label={'F'}
+          ></GradientButton>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: paperTheme.colors.onSurface }}>
+            Fay
+          </Text>
         </View>
-        <View style={styles.right}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: 160,
+            justifyContent: 'flex-end',
+          }}
+        >
           <IconButton
             icon={isDark ? 'white-balance-sunny' : 'weather-night'}
             onPress={() => toggle()}
@@ -45,13 +66,17 @@ export default function Header() {
             <>
               <IconButton
                 icon={isDark ? 'bell' : 'bell-outline'}
-                style={[
-                  styles.squareButton,
-                  {
-                    borderColor: paperTheme.colors.outline,
-                    backgroundColor: paperTheme.colors.surface,
-                  },
-                ]}
+                style={{
+                  width: 40,
+                  height: 40,
+                  borderRadius: 8,
+                  borderWidth: 1,
+                  marginLeft: 8,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderColor: paperTheme.colors.outline,
+                  backgroundColor: paperTheme.colors.surface,
+                }}
               />
 
               <Menu
@@ -60,13 +85,17 @@ export default function Header() {
                 anchor={
                   <IconButton
                     icon={isDark ? 'cog' : 'cog-outline'}
-                    style={[
-                      styles.squareButton,
-                      {
-                        borderColor: paperTheme.colors.outline,
-                        backgroundColor: paperTheme.colors.surface,
-                      },
-                    ]}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      borderRadius: 8,
+                      borderWidth: 1,
+                      marginLeft: 8,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      borderColor: paperTheme.colors.outline,
+                      backgroundColor: paperTheme.colors.surface,
+                    }}
                     onPress={() => setMenuVisible(true)}
                   />
                 }
@@ -88,30 +117,4 @@ export default function Header() {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-  },
-  inner: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-  },
-  left: { flexDirection: 'row', alignItems: 'center', width: 80 },
-  center: { flex: 1, alignItems: 'center' },
-  right: { flexDirection: 'row', alignItems: 'center', width: 160, justifyContent: 'flex-end' },
-  title: { fontSize: 18, fontWeight: '700' },
-  pageTitle: { fontSize: 16, fontWeight: '600' },
-  squareButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    borderWidth: 1,
-    marginLeft: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+// styles moved inline per component-level styling preference

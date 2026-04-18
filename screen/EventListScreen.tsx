@@ -1,6 +1,6 @@
 import { List_event } from '@/services/event.service';
 import React, { useContext, useEffect, useState } from 'react';
-import { FlatList, ListRenderItem, StyleSheet, Text, View } from 'react-native';
+import { FlatList, ListRenderItem, Text, View } from 'react-native';
 import { IconButton, useTheme } from 'react-native-paper';
 import { Event } from '@/types/api.types';
 import { useRouter } from 'expo-router';
@@ -24,11 +24,13 @@ export default function EventListScreen() {
   const renderItem: ListRenderItem<Event> = ({ item }) => (
     <View
       style={[
-        styles.item,
+        { padding: 12, marginBottom: 12, borderWidth: 1, borderRadius: 6 },
         { backgroundColor: theme.colors.surface, borderColor: theme.colors.outline },
       ]}
     >
-      <Text style={[styles.itemTitle, { color: theme.colors.onSurface }]}>{item.name}</Text>
+      <Text style={{ fontWeight: 'bold', marginBottom: 4, color: theme.colors.onSurface }}>
+        {item.name}
+      </Text>
       <Text style={{ color: theme.colors.onSurface }}>{item.location}</Text>
       <Text style={{ color: theme.colors.onSurface }}>{item.price}€</Text>
     </View>
@@ -36,7 +38,7 @@ export default function EventListScreen() {
 
   return (
     <>
-      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <View style={{ flex: 1, padding: 16, backgroundColor: theme.colors.background }}>
         {hasRole(ROLE.CREATOR) && (
           <IconButton
             icon="plus"
@@ -54,9 +56,3 @@ export default function EventListScreen() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
-  item: { padding: 12, marginBottom: 12, borderWidth: 1, borderRadius: 6 },
-  itemTitle: { fontWeight: 'bold', marginBottom: 4 },
-});

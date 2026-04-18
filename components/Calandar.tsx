@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, Text } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Calendar as RNCalendar } from 'react-native-calendars';
 import * as Calendar from 'expo-calendar';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function Calandar() {
   const theme = useTheme();
@@ -57,7 +58,6 @@ export default function Calandar() {
         else marks[day].marked = true;
       });
 
-      // apply customStyles for selected date and today to show rounded square
       const highlight = (base: any = {}) => ({
         ...base,
         customStyles: {
@@ -100,7 +100,7 @@ export default function Calandar() {
 
   if (permissionGranted === false) {
     return (
-      <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <View style={{ backgroundColor: theme.colors.background, flex: 1, padding: 16 }}>
         <Text style={{ color: theme.colors.onSurface }}>
           Calendar permission denied. Please enable it in settings.
         </Text>
@@ -109,7 +109,22 @@ export default function Calandar() {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+    <View style={{ backgroundColor: theme.colors.background, flex: 1, padding: 16 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: 12,
+        }}
+      >
+        <Ionicons name={'calendar-outline'} color={'#6366f1'} size={24} />
+        <Text
+          style={{ color: theme.colors.onSurface, marginLeft: 8, fontSize: 16, fontWeight: '500' }}
+        >
+          {'Mon Agenda'}
+        </Text>
+      </View>
       <RNCalendar
         markingType={'custom'}
         current={isoDate(current)}
@@ -124,7 +139,3 @@ export default function Calandar() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
-});

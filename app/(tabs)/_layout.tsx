@@ -19,7 +19,11 @@ export default function TabLayout() {
           options={{
             title: 'Vibe',
             tabBarIcon: ({ color, focused }) => (
-              <Ionicons name={focused ? 'star-sharp' : 'star-outline'} color={color} size={24} />
+              <Ionicons
+                name={focused ? 'sparkles-sharp' : 'sparkles-outline'}
+                color={color}
+                size={24}
+              />
             ),
           }}
         />
