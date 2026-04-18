@@ -1,7 +1,10 @@
 import React, { useContext } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { AuthProvider, AuthContext } from '@/context/AuthContext';
+import { ThemeProvider } from '@/context/ThemeContext';
+import Header from '@/components/Header';
 import { useRouter, Stack } from 'expo-router';
+import { useTheme } from 'react-native-paper';
 
 export default function RootLayout() {
   const { loading, isAuthenticated } = useContext(AuthContext);
@@ -16,20 +19,36 @@ export default function RootLayout() {
   }
 
   if (isAuthenticated) {
-    router.replace('/(tabs)/home');
+    router.replace('/(tabs)/agenda');
   }
 
   return (
     <AuthProvider>
-      <Stack initialRouteName="index">
+      <ThemeProvider>
+        <LayoutContent />
+      </ThemeProvider>
+    </AuthProvider>
+  );
+}
+
+function LayoutContent() {
+  const theme = useTheme();
+  return (
+    <>
+      <Header />
+      <Stack
+        initialRouteName="index"
+        screenOptions={{
+          headerShown: false,
+          headerStyle: { backgroundColor: theme.colors.surface },
+          headerTintColor: theme.colors.onSurface,
+          headerTitleStyle: { fontWeight: '600' },
+        }}
+      >
         <Stack.Screen name="index" options={{ headerShown: false, title: 'Register' }} />
         <Stack.Screen name="login" options={{ headerShown: false, title: 'Login' }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false, title: 'Nav' }} />
-        <Stack.Screen
-          name="(tabs)/create_event"
-          options={{ presentation: 'modal', title: 'Créer un événement' }}
-        />
       </Stack>
-    </AuthProvider>
+    </>
   );
 }

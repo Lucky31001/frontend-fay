@@ -14,6 +14,30 @@ const client = axios.create({
   },
 });
 
+// Response interceptor to log errors for easier debugging (keeps throwing original error)
+// client.interceptors.response.use(
+//   (response) => response,
+//   (error) => {
+//     try {
+//       console.error('Axios response error:', {
+//         message: error?.message,
+//         code: error?.code,
+//         url: error?.config?.url,
+//         method: error?.config?.method,
+//         baseURL: error?.config?.baseURL,
+//         headers: error?.config?.headers,
+//         data: error?.config?.data,
+//         request: !!error?.request,
+//         responseStatus: error?.response?.status,
+//         responseData: error?.response?.data,
+//       });
+//     } catch (e) {
+//       // ignore logging failure
+//     }
+//     return Promise.reject(error);
+//   },
+// );
+
 client.interceptors.request.use(async (config) => {
   try {
     const url = String(config?.url ?? '');

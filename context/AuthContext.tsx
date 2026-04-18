@@ -60,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (t && !isJwtExpired(t)) {
           setToken(t);
           setIsAuthenticated(true);
-          router.push('/(tabs)/home');
+          router.push('/(tabs)/agenda');
         } else {
           setToken(null);
           setIsAuthenticated(false);

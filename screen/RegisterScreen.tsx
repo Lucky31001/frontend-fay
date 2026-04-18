@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, Alert, Switch, TouchableOpacity, Pressable } from 'react-native';
+import { useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { register } from '@/services/auth.service';
 import { AuthContext } from '@/context/AuthContext';
@@ -53,7 +54,7 @@ export default function RegisterScreen() {
       const data = await register(payload);
       if (data && data.access_token) {
         await signIn(data.access_token, data.refresh_token);
-        router.push('/(tabs)/home');
+        router.push('/(tabs)/agenda');
       }
     } catch (err: any) {
       Alert.alert('Erreur', err?.message || "Impossible de s'inscrire");
@@ -62,8 +63,16 @@ export default function RegisterScreen() {
     }
   };
 
+  const theme = useTheme();
+
   const renderRule = (ok: boolean, label: string) => (
-    <Text style={{ color: ok ? '#10b981' : '#ef4444', fontSize: 13, marginBottom: 4 }}>
+    <Text
+      style={{
+        color: ok ? theme.colors.primary : theme.colors.error,
+        fontSize: 13,
+        marginBottom: 4,
+      }}
+    >
       {ok ? '✓' : '✕'} {label}
     </Text>
   );
@@ -72,7 +81,7 @@ export default function RegisterScreen() {
     <View
       style={{
         flex: 1,
-        backgroundColor: '#f6f8fb',
+        backgroundColor: theme.colors.background,
         alignItems: 'center',
         justifyContent: 'center',
         padding: 20,
@@ -82,7 +91,7 @@ export default function RegisterScreen() {
         style={{
           width: '100%',
           maxWidth: 420,
-          backgroundColor: '#fff',
+          backgroundColor: theme.colors.surface,
           borderRadius: 12,
           padding: 20,
           shadowColor: '#000',
@@ -98,13 +107,13 @@ export default function RegisterScreen() {
             fontWeight: '600',
             marginBottom: 14,
             textAlign: 'center',
-            color: '#111827',
+            color: theme.colors.onSurface,
           }}
         >
           Créer un compte
         </Text>
 
-        <Text style={{ marginBottom: 6, color: '#374151', fontWeight: '500' }}>
+        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
           Nom d ’utilisateur
         </Text>
         <TextInput
@@ -114,15 +123,17 @@ export default function RegisterScreen() {
           autoCapitalize="none"
           style={{
             borderWidth: 1,
-            borderColor: '#e6e9ef',
+            borderColor: theme.colors.outline || '#e6e9ef',
             padding: 12,
             borderRadius: 8,
             marginBottom: 12,
-            backgroundColor: '#fafafa',
+            backgroundColor: theme.colors.surface,
           }}
         />
 
-        <Text style={{ marginBottom: 6, color: '#374151', fontWeight: '500' }}>Email</Text>
+        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
+          Email
+        </Text>
         <TextInput
           placeholder="Email"
           value={email}
@@ -131,15 +142,17 @@ export default function RegisterScreen() {
           autoCapitalize="none"
           style={{
             borderWidth: 1,
-            borderColor: '#e6e9ef',
+            borderColor: theme.colors.outline || '#e6e9ef',
             padding: 12,
             borderRadius: 8,
             marginBottom: 12,
-            backgroundColor: '#fafafa',
+            backgroundColor: theme.colors.surface,
           }}
         />
 
-        <Text style={{ marginBottom: 6, color: '#374151', fontWeight: '500' }}>Mot de passe</Text>
+        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
+          Mot de passe
+        </Text>
         <TextInput
           placeholder="Mot de passe"
           value={password}
@@ -147,11 +160,11 @@ export default function RegisterScreen() {
           secureTextEntry
           style={{
             borderWidth: 1,
-            borderColor: '#e6e9ef',
+            borderColor: theme.colors.outline || '#e6e9ef',
             padding: 12,
             borderRadius: 8,
             marginBottom: 10,
-            backgroundColor: '#fafafa',
+            backgroundColor: theme.colors.surface,
           }}
         />
 
@@ -172,18 +185,22 @@ export default function RegisterScreen() {
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ marginRight: 10, color: '#374151' }}>Créateur</Text>
+            <Text style={{ marginRight: 10, color: theme.colors.onSurface }}>Créateur</Text>
             <Switch value={isCreator} onValueChange={setIsCreator} />
           </View>
 
-          <Text style={{ color: '#6b7280' }}>{isCreator ? 'CREATOR' : 'USER'}</Text>
+          <Text style={{ color: theme.colors.onSurface }}>{isCreator ? 'CREATOR' : 'USER'}</Text>
         </View>
 
         <Pressable
           onPress={onSubmit}
           disabled={loading}
           style={({ pressed }) => ({
-            backgroundColor: loading ? '#a5c6ff' : pressed ? '#1d4ed8' : '#2563eb',
+            backgroundColor: loading
+              ? theme.colors.primary || '#a5c6ff'
+              : pressed
+                ? theme.colors.primary
+                : theme.colors.primary,
             paddingVertical: 12,
             borderRadius: 8,
             alignItems: 'center',
@@ -191,15 +208,17 @@ export default function RegisterScreen() {
             opacity: loading ? 0.7 : 1,
           })}
         >
-          <Text style={{ color: '#fff', fontWeight: '600' }}>
+          <Text style={{ color: theme.colors.onPrimary || '#fff', fontWeight: '600' }}>
             {loading ? 'En cours...' : 'S\u2019inscrire'}
           </Text>
         </Pressable>
 
         <View style={{ alignItems: 'center' }}>
-          <Text style={{ color: '#6b7280', marginBottom: 8 }}>Déjà un compte ?</Text>
+          <Text style={{ color: theme.colors.outline || '#6b7280', marginBottom: 8 }}>
+            Déjà un compte ?
+          </Text>
           <TouchableOpacity onPress={() => router.replace('/login')}>
-            <Text style={{ color: '#2563eb', fontWeight: '600' }}>Aller au login</Text>
+            <Text style={{ color: theme.colors.primary, fontWeight: '600' }}>Aller au login</Text>
           </TouchableOpacity>
         </View>
       </View>

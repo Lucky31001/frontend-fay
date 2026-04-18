@@ -19,8 +19,11 @@ export async function request({
     const response = await client({ method, url, data, params, headers });
     return response.data;
   } catch (err: any) {
-    const message =
-      err?.response?.data?.detail ?? err?.response?.data ?? err?.message ?? 'Erreur réseau';
-    throw new Error(typeof message === 'string' ? message : JSON.stringify(message));
+    // Extract error message from response if available
+    // const errorMessage =
+    //   err?.response?.data?.message ||
+    //   err?.message ||
+    //   'Une erreur est survenue lors de la requête';
+    // throw new Error(errorMessage);
   }
 }

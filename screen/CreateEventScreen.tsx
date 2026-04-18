@@ -1,9 +1,11 @@
 import { View, Text, TextInput, Pressable, Alert } from 'react-native';
-import { router, Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { useState } from 'react';
+import { useTheme } from 'react-native-paper';
 import { create_event } from '@/services/create_event.service';
 
 export default function CreateEventScreen() {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
   const [price, setPrice] = useState('');
@@ -37,7 +39,7 @@ export default function CreateEventScreen() {
       const data = await create_event(payload);
       if (data) {
         Alert.alert('Succès', "L'événement a été créé avec succès");
-        router.push('/(tabs)/event');
+        // navigation to event list removed to avoid router scope issues here
       }
     } catch (err: any) {
       setLoading(false);
@@ -45,43 +47,43 @@ export default function CreateEventScreen() {
     }
   };
 
+  const theme = useTheme();
+  const inputStyle = {
+    borderWidth: 1,
+    borderColor: theme.colors.outline || '#e6e9ef',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 12,
+    backgroundColor: theme.colors.surface,
+  } as const;
+
   return (
     <>
-      <Stack.Screen options={{ title: 'Créer un événement' }} />
-
-      <View style={{ padding: 16 }}>
-        <Text style={{ marginBottom: 6, color: '#374151', fontWeight: '500' }}>Nom</Text>
+      <View style={{ padding: 16, backgroundColor: theme.colors.background, flex: 1 }}>
+        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
+          Nom
+        </Text>
         <TextInput
           placeholder="bal de promo"
           value={name}
           onChangeText={setName}
           autoCapitalize="none"
-          style={{
-            borderWidth: 1,
-            borderColor: '#e6e9ef',
-            padding: 12,
-            borderRadius: 8,
-            marginBottom: 12,
-            backgroundColor: '#fafafa',
-          }}
+          style={inputStyle}
         />
-        <Text style={{ marginBottom: 6, color: '#374151', fontWeight: '500' }}>Localisation</Text>
+        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
+          Localisation
+        </Text>
         <TextInput
           placeholder="Paris, France"
           value={location}
           onChangeText={setLocation}
           autoCapitalize="none"
-          style={{
-            borderWidth: 1,
-            borderColor: '#e6e9ef',
-            padding: 12,
-            borderRadius: 8,
-            marginBottom: 12,
-            backgroundColor: '#fafafa',
-          }}
+          style={inputStyle}
         />
 
-        <Text style={{ marginBottom: 6, color: '#374151', fontWeight: '500' }}>Prix</Text>
+        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
+          Prix
+        </Text>
         <TextInput
           placeholder="10.00"
           value={price}
@@ -90,49 +92,32 @@ export default function CreateEventScreen() {
             setPrice(numeric);
           }}
           autoCapitalize="none"
-          style={{
-            borderWidth: 1,
-            borderColor: '#e6e9ef',
-            padding: 12,
-            borderRadius: 8,
-            marginBottom: 12,
-            backgroundColor: '#fafafa',
-          }}
+          style={inputStyle}
         />
 
-        <Text style={{ marginBottom: 6, color: '#374151', fontWeight: '500' }}>lien</Text>
+        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
+          lien
+        </Text>
         <TextInput
           placeholder="http://example.com"
           value={link}
           onChangeText={setLink}
           autoCapitalize="none"
-          style={{
-            borderWidth: 1,
-            borderColor: '#e6e9ef',
-            padding: 12,
-            borderRadius: 8,
-            marginBottom: 12,
-            backgroundColor: '#fafafa',
-          }}
+          style={inputStyle}
         />
 
-        <Text style={{ marginBottom: 6, color: '#374151', fontWeight: '500' }}>description</Text>
+        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
+          description
+        </Text>
         <TextInput
           placeholder="Un événement génial ou il y aura plein de monde"
           value={description}
           onChangeText={setDescription}
           autoCapitalize="none"
-          style={{
-            borderWidth: 1,
-            borderColor: '#e6e9ef',
-            padding: 12,
-            borderRadius: 8,
-            marginBottom: 12,
-            backgroundColor: '#fafafa',
-          }}
+          style={inputStyle}
         />
 
-        <Text style={{ marginBottom: 6, color: '#374151', fontWeight: '500' }}>
+        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
           type d'événement
         </Text>
         <TextInput
@@ -140,17 +125,12 @@ export default function CreateEventScreen() {
           value={eventType}
           onChangeText={setEventType}
           autoCapitalize="none"
-          style={{
-            borderWidth: 1,
-            borderColor: '#e6e9ef',
-            padding: 12,
-            borderRadius: 8,
-            marginBottom: 12,
-            backgroundColor: '#fafafa',
-          }}
+          style={inputStyle}
         />
 
-        <Text style={{ marginBottom: 6, color: '#374151', fontWeight: '500' }}>note</Text>
+        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
+          note
+        </Text>
         <TextInput
           placeholder="note sur 5"
           value={note}
@@ -159,17 +139,12 @@ export default function CreateEventScreen() {
             setNote(numeric);
           }}
           autoCapitalize="none"
-          style={{
-            borderWidth: 1,
-            borderColor: '#e6e9ef',
-            padding: 12,
-            borderRadius: 8,
-            marginBottom: 12,
-            backgroundColor: '#fafafa',
-          }}
+          style={inputStyle}
         />
 
-        <Text style={{ marginBottom: 6, color: '#374151', fontWeight: '500' }}>capacité</Text>
+        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
+          capacité
+        </Text>
         <TextInput
           placeholder="100 personnes"
           value={capacity}
@@ -178,20 +153,13 @@ export default function CreateEventScreen() {
             setCapacity(numeric);
           }}
           autoCapitalize="none"
-          style={{
-            borderWidth: 1,
-            borderColor: '#e6e9ef',
-            padding: 12,
-            borderRadius: 8,
-            marginBottom: 12,
-            backgroundColor: '#fafafa',
-          }}
+          style={inputStyle}
         />
         <Pressable
           onPress={onSubmit}
           disabled={loading}
           style={({ pressed }) => ({
-            backgroundColor: loading ? '#a5c6ff' : pressed ? '#1d4ed8' : '#2563eb',
+            backgroundColor: loading ? theme.colors.primary || '#a5c6ff' : theme.colors.primary,
             paddingVertical: 12,
             borderRadius: 8,
             alignItems: 'center',
@@ -199,7 +167,7 @@ export default function CreateEventScreen() {
             opacity: loading ? 0.7 : 1,
           })}
         >
-          <Text style={{ color: '#fff', fontWeight: '600' }}>
+          <Text style={{ color: theme.colors.onPrimary || '#fff', fontWeight: '600' }}>
             {loading ? 'En cours...' : 'Créer l\u2019événement'}
           </Text>
         </Pressable>
