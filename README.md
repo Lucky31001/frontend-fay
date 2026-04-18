@@ -116,13 +116,8 @@ Pour publier en production, créez un build Expo (via EAS ou `expo build` selon 
 - Expo : https://expo.dev
 - Expo Router : https://expo.dev/router
 - React Native : https://reactnative.dev
-
----
-
-Si vous voulez, je peux :
-
-- Ajouter une section pour la configuration EAS (builds) si vous utilisez EAS
-- Générer un fichier `.env.example` et une petite section expliquant les variables d'API
-- Traduire certaines parties du code ou ajouter un guide de contribution plus détaillé
-
-Dites-moi ce que vous préférez.
+- TypeScript : https://www.typescriptlang.org
+- Jest : https://jestjs.io
+- React Testing Library : https://testing-library.com/docs/react-native-testing-library/intro
+- ESLint : https://eslint.org
+- Prettier : https://prettier.io
