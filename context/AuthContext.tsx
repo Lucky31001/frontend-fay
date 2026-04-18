@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState, ReactNode } from 'react';
 import { useRouter } from 'expo-router';
 import { storage } from '@/utils/storage';
+import { ROLE } from '@/constant/role';
 
 type AuthContextType = {
   token: string | null;
@@ -8,6 +9,7 @@ type AuthContextType = {
   signIn: (token: string, refresh?: string) => Promise<void>;
   signOut: () => Promise<void>;
   isAuthenticated: boolean;
+  hasRole: (role: ROLE) => boolean;
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -16,6 +18,7 @@ export const AuthContext = createContext<AuthContextType>({
   signIn: async () => {},
   signOut: async () => {},
   isAuthenticated: false,
+  hasRole: () => false,
 });
 
 function decodeJwtPayload(token: string): any | null {
@@ -78,7 +81,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (refresh) await storage.setItem('refresh_token', refresh);
     setToken(t);
     setIsAuthenticated(true);
-    console.log('Signed in, token set');
+    router.push('/(tabs)/agenda');
   };
 
   const signOut = async () => {
@@ -86,14 +89,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await storage.removeItem('refresh_token');
     setToken(null);
     setIsAuthenticated(false);
+    router.replace('/login');
   };
 
   useEffect(() => {
     setIsAuthenticated(!!token && !isJwtExpired(token));
   }, [token]);
 
+  const hasRole = (role: ROLE) => {
+    return decodeJwtPayload(token || '')?.role == role;
+  };
+
   return (
-    <AuthContext.Provider value={{ token, loading, signIn, signOut, isAuthenticated }}>
+    <AuthContext.Provider value={{ token, loading, signIn, signOut, isAuthenticated, hasRole }}>
       {children}
     </AuthContext.Provider>
   );

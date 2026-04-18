@@ -1,15 +1,17 @@
 import { List_event } from '@/services/event.service';
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ListRenderItem, Pressable, StyleSheet } from 'react-native';
-import { useTheme, IconButton } from 'react-native-paper';
-import type { APIEvent } from '@/types/api.types';
-import { Stack } from 'expo-router';
+import React, { useContext, useEffect, useState } from 'react';
+import { FlatList, ListRenderItem, StyleSheet, Text, View } from 'react-native';
+import { IconButton, useTheme } from 'react-native-paper';
+import { Event } from '@/types/api.types';
 import { useRouter } from 'expo-router';
+import { AuthContext } from '@/context/AuthContext';
+import { ROLE } from '@/constant/role';
 
 export default function EventListScreen() {
-  const [events, setEvents] = useState<APIEvent[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const router = useRouter();
   const theme = useTheme();
+  const { hasRole } = useContext(AuthContext);
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -19,7 +21,7 @@ export default function EventListScreen() {
     fetchEvent();
   }, []);
 
-  const renderItem: ListRenderItem<APIEvent> = ({ item }) => (
+  const renderItem: ListRenderItem<Event> = ({ item }) => (
     <View
       style={[
         styles.item,
@@ -35,12 +37,14 @@ export default function EventListScreen() {
   return (
     <>
       <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-        <IconButton
-          icon="plus"
-          onPress={() => router.push('/(tabs)/create_event')}
-          size={20}
-          style={{ marginRight: 6 }}
-        />
+        {hasRole(ROLE.CREATOR) && (
+          <IconButton
+            icon="plus"
+            onPress={() => router.push('/(tabs)/create_event')}
+            size={20}
+            style={{ marginRight: 6 }}
+          />
+        )}
         <FlatList
           data={events}
           keyExtractor={(item) => item.id.toString()}

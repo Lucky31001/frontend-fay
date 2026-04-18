@@ -4,6 +4,7 @@ import { useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { register } from '@/services/auth.service';
 import { AuthContext } from '@/context/AuthContext';
+import { ROLE } from '@/constant/role';
 
 export default function RegisterScreen() {
   const router = useRouter();
@@ -46,7 +47,7 @@ export default function RegisterScreen() {
       username,
       email,
       password,
-      role: isCreator ? 'CREATOR' : 'USER',
+      role: isCreator ? ROLE.CREATOR : ROLE.USER,
     };
 
     try {
@@ -54,7 +55,6 @@ export default function RegisterScreen() {
       const data = await register(payload);
       if (data && data.access_token) {
         await signIn(data.access_token, data.refresh_token);
-        router.push('/(tabs)/agenda');
       }
     } catch (err: any) {
       Alert.alert('Erreur', err?.message || "Impossible de s'inscrire");
@@ -218,7 +218,7 @@ export default function RegisterScreen() {
             Déjà un compte ?
           </Text>
           <TouchableOpacity onPress={() => router.replace('/login')}>
-            <Text style={{ color: theme.colors.primary, fontWeight: '600' }}>Aller au login</Text>
+            <Text style={{ color: theme.colors.primary, fontWeight: '600' }}>Connection</Text>
           </TouchableOpacity>
         </View>
       </View>

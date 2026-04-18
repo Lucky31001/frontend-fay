@@ -9,7 +9,11 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCalendarsUsageDescription": "L'application a besoin d'accéder à votre calendrier pour afficher vos événements.",
+        "NSRemindersUsageDescription": "L'application peut accéder aux rappels pour afficher les événements liés."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -19,6 +23,7 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
+      "permissions": ["READ_CALENDAR", "WRITE_CALENDAR"],
       "predictiveBackGestureEnabled": false,
       "config": {
         "googleMaps": {

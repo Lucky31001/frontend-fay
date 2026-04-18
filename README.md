@@ -103,7 +103,7 @@ npm run format
 
 ## Déploiement
 
-Pour publier en production, créez un build Expo (via EAS ou `expo build` selon votre configuration). Ce README ne couvre pas la configuration EAS ; si nécessaire, je peux ajouter une section dédiée.
+Pour publier en production, créez un build Expo (via EAS ou `expo build` selon votre configuration).
 
 ## Contribution
 
@@ -121,3 +121,5 @@ Pour publier en production, créez un build Expo (via EAS ou `expo build` selon 
 - React Testing Library : https://testing-library.com/docs/react-native-testing-library/intro
 - ESLint : https://eslint.org
 - Prettier : https://prettier.io
+- Axios : https://axios-http.com
+- Material Design Icons : https://pictogrammers.com/library/mdi/

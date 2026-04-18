@@ -1,13 +1,14 @@
-import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, Alert, TouchableOpacity, Pressable } from 'react-native';
+import React, { useContext, useState } from 'react';
+import { Alert, Pressable, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { login } from '@/services/auth.service';
 import { AuthContext } from '@/context/AuthContext';
+import { ROLE } from '@/constant/role';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { signIn } = useContext(AuthContext);
+  const { signIn, hasRole } = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -27,7 +28,6 @@ export default function LoginScreen() {
       const data = await login(payload);
       if (data && data.access_token) {
         await signIn(data.access_token, data.refresh_token);
-        router.push('/(tabs)/agenda');
       }
     } catch (err: any) {
       Alert.alert('Erreur', err?.message || 'Impossible de se connecter');
@@ -144,9 +144,7 @@ export default function LoginScreen() {
             Pas encore de compte ?
           </Text>
           <TouchableOpacity onPress={() => router.replace('/')}>
-            <Text style={{ color: theme.colors.primary, fontWeight: '600' }}>
-              Aller à l’inscription
-            </Text>
+            <Text style={{ color: theme.colors.primary, fontWeight: '600' }}>Inscription</Text>
           </TouchableOpacity>
         </View>
       </View>

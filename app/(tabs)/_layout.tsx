@@ -11,9 +11,27 @@ export default function TabLayout() {
           tabBarActiveTintColor: theme.colors.primary,
           tabBarInactiveTintColor: theme.colors.onSurface,
           tabBarStyle: { backgroundColor: theme.colors.surface },
-            headerShown: false
+          headerShown: false,
         }}
       >
+        <Tabs.Screen
+          name="vibe"
+          options={{
+            title: 'Vibe',
+            tabBarIcon: ({ color, focused }) => (
+              <Ionicons name={focused ? 'star-sharp' : 'star-outline'} color={color} size={24} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="follow"
+          options={{
+            title: 'Follow',
+            tabBarIcon: ({ color, focused }) => (
+              <Ionicons name={focused ? 'heart-sharp' : 'heart-outline'} color={color} size={24} />
+            ),
+          }}
+        />
         <Tabs.Screen
           name="agenda"
           options={{
@@ -30,7 +48,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="event"
           options={{
-            title: 'Événements',
+            title: 'Liste',
             tabBarIcon: ({ color, focused }) => (
               <Ionicons name={focused ? 'list-sharp' : 'list-outline'} color={color} size={24} />
             ),
