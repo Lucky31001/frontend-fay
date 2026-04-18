@@ -1,9 +1,13 @@
 import axios from 'axios';
 import { storage } from '@/utils/storage';
 import { API_URL } from '@/constant/urls';
+import { API_BASE_URL } from '@/utils/config';
+
+// Centralized API base URL from utils/config
+console.log('API_BASE_URL used by axios:', API_BASE_URL);
 
 const client = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: API_BASE_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
