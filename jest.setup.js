@@ -58,7 +58,8 @@ jest.mock('@expo/vector-icons/Ionicons', () => {
 // Minimal DateTimePicker mock
 jest.mock('@react-native-community/datetimepicker', () => {
   const React = require('react');
-  const DateTimePickerMock = (props) => React.createElement('Text', { 'data-testid': 'datetimepicker' }, 'datetime');
+  const DateTimePickerMock = (props) =>
+    React.createElement('Text', { 'data-testid': 'datetimepicker' }, 'datetime');
   DateTimePickerMock.displayName = 'DateTimePickerMock';
   return DateTimePickerMock;
 });

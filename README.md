@@ -71,7 +71,33 @@ Remarque sur les dépendances natives
 
 ## Configuration et variables d'environnement
 
-Les appels réseau utilisent les services dans `services/`. Si l'application consomme une API distante, définissez l'URL de l'API dans `constant/urls.ts` ou via une approche d'environnement si vous préférez (ex : `app.config.js`, ou fichiers `.env` + `babel-plugin-inline-dotenv`).
+Les appels réseau utilisent les services dans `services/`. Si l'application consomme une API distante, définissez l'URL de l'API dans `constant/urls.ts` ou via une approche d'environnement si vous préférez.
+
+Configuration dynamique
+
+Cette application utilise désormais un fichier de configuration dynamique `app.config.js` qui lit les variables d'environnement depuis un fichier `.env` (via `dotenv`) et construit la configuration Expo au runtime. Par défaut la variable la plus importante est :
+
+- `API_BASE_URL` — URL de base de l'API (ex. `http://localhost:8000` ou une URL locale de réseau). Elle est exposée sous `expo.extra.API_BASE_URL` pour être accessible depuis l'application.
+
+Exemples :
+
+Créer un fichier `.env` à la racine :
+
+```bash
+API_BASE_URL=https://api.example.com
+```
+
+Puis démarrer l'app normalement :
+
+```bash
+npm start
+# ou
+npx expo start
+```
+
+Notes concernant `app.json`
+
+Pour éviter les conflits entre une config statique (`app.json`) et la config dynamique, le dépôt a renommé temporairement `app.json` en `app.json.bak`.
 
 Fonctionnalités importantes
 
@@ -85,17 +111,29 @@ Note : l'autocomplétion d'adresse utilise Nominatim (gratuit). Si vous préfér
 
 ## Tests
 
-Ce projet utilise Jest et `@testing-library/react-native`. Pour lancer les tests :
+Ce projet utilise Jest et `@testing-library/react-native`. J'ai ajouté des mocks utiles dans `jest.setup.js` (mock des services, storage, `expo-calendar`, `Ionicons`, `DateTimePicker`) pour rendre les tests stables et rapides.
+
+Commandes générales :
 
 ```bash
 npm test
 ```
 
-Pour lancer un seul test en mode watch :
+Lancer les tests en mode watch :
 
 ```bash
 npm run test:watch
 ```
+
+Lancer uniquement les tests d'un dossier ou d'un pattern :
+
+```bash
+npm test -- --testPathPattern=app/__tests__
+```
+
+Conseils pour écrire des tests UI :
+- Utilise `findBy*` (async) si le composant fait des mises à jour d'état asynchrones au montage.
+- Mocke les modules natifs ou réseau (ex : `expo-calendar`, `expo-secure-store`, services réseau) dans `jest.setup.js` pour éviter effets de bord.
 
 ## Linting & Format
 

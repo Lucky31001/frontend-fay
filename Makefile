@@ -5,4 +5,4 @@ run:
 	npm start
 
 prettier:
-	npm run prettier
+	npm run format
