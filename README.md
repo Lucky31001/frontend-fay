@@ -9,6 +9,15 @@ Ce dépôt contient l'application mobile "FAY" développée avec Expo et React N
 - Expo CLI est optionnel (nous utilisons `npx expo` dans les scripts)
 - Un émulateur Android/iOS ou l'application Expo Go pour tester sur un appareil
 
+Remarque sur les dépendances natives
+
+- Certaines fonctionnalités utilisent des modules natifs/expo :
+  - `@react-native-community/datetimepicker` (sélecteur d'heure natif)
+  - `expo-image-picker` (sélection d'image depuis la galerie)
+  - `expo-image-manipulator` (recadrage/redimensionnement côté client)
+  - `expo-location` (géolocalisation + reverse-geocode)
+  - `react-native-toast-message` (toasts globaux)
+
 ## Installation
 
 1. Installer les dépendances :
@@ -52,7 +61,7 @@ Ce dépôt contient l'application mobile "FAY" développée avec Expo et React N
   - `login.tsx`, `RegisterScreen`, etc. — écrans principaux
 - `components/` — composants réutilisables
 - `screen/` — écrans non-routés (utilisés par l'app)
-- `services/` — appels réseau / services (ex : `auth.service.ts`, `event.service.ts`)
+- `services/` — appels réseau / services (ex : `auth.ts`, `event.ts`)
 - `context/` — context React (ex : `AuthContext.tsx`)
 - `utils/` — utilitaires et client HTTP
 - `assets/` — images et ressources statiques
@@ -63,6 +72,16 @@ Ce dépôt contient l'application mobile "FAY" développée avec Expo et React N
 ## Configuration et variables d'environnement
 
 Les appels réseau utilisent les services dans `services/`. Si l'application consomme une API distante, définissez l'URL de l'API dans `constant/urls.ts` ou via une approche d'environnement si vous préférez (ex : `app.config.js`, ou fichiers `.env` + `babel-plugin-inline-dotenv`).
+
+Fonctionnalités importantes
+
+- Sélecteur de date/heure : le composant `CustomCalendar` permet de choisir la date et l'heure (utilise le picker natif pour l'heure).
+- Localisation : `LocationPicker` propose l'autocompletion d'adresses via Nominatim (OpenStreetMap) et un bouton "Utiliser ma position" (reverse-geocode via `expo-location`).
+- Upload d'images : l'écran de création d'événement permet de choisir une image depuis la galerie, elle est recadrée et redimensionnée côté client pour correspondre au rendu des cartes (utilise `expo-image-manipulator`).
+- Liste d'événements : l'écran liste ouvre un modal de détail (`EventDetailsModal`) quand on tape un événement (image, types overlay, date, lieu, note, prix, bouton pour ouvrir dans Maps).
+- Toasts : les erreurs réseau et messages utilisateur s'affichent via `react-native-toast-message`.
+
+Note : l'autocomplétion d'adresse utilise Nominatim (gratuit). Si vous préférez Google Places, une intégration peut être ajoutée mais nécessite une clé API et restrictions d'usage.
 
 ## Tests
 
@@ -101,6 +120,18 @@ npm run format
 - Placer la logique réseau dans `services/` et l'état global dans `context/`.
 - Ajouter des tests pour les composants critiques (écrans d'authentification, flux d'événement, etc.).
 
+Tips pour le développement local
+
+- Si vous modifiez des dépendances natives, redémarrez Metro avec :
+
+```bash
+npx expo start -c
+```
+
+- Pour tester l'accès à la galerie et à la localisation, testez sur un appareil physique ou un émulateur qui supporte ces permissions.
+
+- Formattage décimal : les champs `Prix` et `Note` acceptent la virgule comme séparateur décimal dans l'UI (ex. `10,50`). Avant envoi au backend ces valeurs sont normalisées (`,` -> `.`).
+
 ## Déploiement
 
 Pour publier en production, créez un build Expo (via EAS ou `expo build` selon votre configuration).
@@ -123,3 +154,4 @@ Pour publier en production, créez un build Expo (via EAS ou `expo build` selon 
 - Prettier : https://prettier.io
 - Axios : https://axios-http.com
 - Ionicons : https://ionic.io/ionicons
+- Naminatim : https://nominatim.org/release-docs/latest/api/Search/

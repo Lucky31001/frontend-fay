@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, Alert, Switch, TouchableOpacity, Pressable } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
-import { register } from '@/services/auth.service';
+import { register } from '@/services/auth';
 import { AuthContext } from '@/context/AuthContext';
 import { ROLE } from '@/constant/role';
 
@@ -121,6 +121,8 @@ export default function RegisterScreen() {
           value={username}
           onChangeText={setUsername}
           autoCapitalize="none"
+          placeholderTextColor={theme.colors.onSurface}
+          keyboardAppearance={theme.dark ? 'dark' : 'light'}
           style={{
             borderWidth: 1,
             borderColor: theme.colors.outline || '#e6e9ef',
@@ -128,6 +130,7 @@ export default function RegisterScreen() {
             borderRadius: 8,
             marginBottom: 12,
             backgroundColor: theme.colors.surface,
+            color: theme.colors.onSurface,
           }}
         />
 
@@ -140,6 +143,8 @@ export default function RegisterScreen() {
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
+          placeholderTextColor={theme.colors.onSurface}
+          keyboardAppearance={theme.dark ? 'dark' : 'light'}
           style={{
             borderWidth: 1,
             borderColor: theme.colors.outline || '#e6e9ef',
@@ -147,6 +152,7 @@ export default function RegisterScreen() {
             borderRadius: 8,
             marginBottom: 12,
             backgroundColor: theme.colors.surface,
+            color: theme.colors.onSurface,
           }}
         />
 
@@ -158,6 +164,8 @@ export default function RegisterScreen() {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
+          placeholderTextColor={theme.colors.onSurface}
+          keyboardAppearance={theme.dark ? 'dark' : 'light'}
           style={{
             borderWidth: 1,
             borderColor: theme.colors.outline || '#e6e9ef',
@@ -165,6 +173,7 @@ export default function RegisterScreen() {
             borderRadius: 8,
             marginBottom: 10,
             backgroundColor: theme.colors.surface,
+            color: theme.colors.onSurface,
           }}
         />
 

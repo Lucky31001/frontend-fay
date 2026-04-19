@@ -6,12 +6,11 @@ import { useTheme, IconButton, Menu } from 'react-native-paper';
 import { useSegments, useRouter } from 'expo-router';
 import { AuthContext } from '@/context/AuthContext';
 import GradientButton from '@/components/GradientButton';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function Header() {
   const { isDark, toggle } = useContext(ThemeContext);
   const { signOut } = useContext(AuthContext);
-  const paperTheme = useTheme();
+  const theme = useTheme();
   const segments = useSegments();
   const current = String(segments[segments.length - 1] ?? '');
   const hideActions = current === 'login' || current === 'index' || current === '';
@@ -20,7 +19,7 @@ export default function Header() {
 
   return (
     <SafeAreaView
-      style={{ width: '100%', backgroundColor: paperTheme.colors.background }}
+      style={{ width: '100%', backgroundColor: theme.colors.background }}
       edges={['top']}
     >
       <View
@@ -31,7 +30,7 @@ export default function Header() {
           paddingHorizontal: 16,
           paddingVertical: 10,
           borderBottomWidth: 1,
-          borderBottomColor: paperTheme.colors.outlineVariant,
+          borderBottomColor: theme.colors.outlineVariant,
         }}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', width: 80 }}>
@@ -45,7 +44,7 @@ export default function Header() {
             }}
             label={'F'}
           ></GradientButton>
-          <Text style={{ fontSize: 18, fontWeight: '700', color: paperTheme.colors.onSurface }}>
+          <Text style={{ fontSize: 18, fontWeight: '700', color: theme.colors.onSurface }}>
             Fay
           </Text>
         </View>
@@ -74,8 +73,8 @@ export default function Header() {
                   marginLeft: 8,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  borderColor: paperTheme.colors.outline,
-                  backgroundColor: paperTheme.colors.surface,
+                  borderColor: theme.colors.outline,
+                  backgroundColor: theme.colors.surface,
                 }}
               />
 
@@ -93,8 +92,8 @@ export default function Header() {
                       marginLeft: 8,
                       justifyContent: 'center',
                       alignItems: 'center',
-                      borderColor: paperTheme.colors.outline,
-                      backgroundColor: paperTheme.colors.surface,
+                      borderColor: theme.colors.outline,
+                      backgroundColor: theme.colors.surface,
                     }}
                     onPress={() => setMenuVisible(true)}
                   />

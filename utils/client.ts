@@ -9,41 +9,12 @@ console.log('API_BASE_URL used by axios:', API_BASE_URL);
 const client = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
-
-// Response interceptor to log errors for easier debugging (keeps throwing original error)
-// client.interceptors.response.use(
-//   (response) => response,
-//   (error) => {
-//     try {
-//       console.error('Axios response error:', {
-//         message: error?.message,
-//         code: error?.code,
-//         url: error?.config?.url,
-//         method: error?.config?.method,
-//         baseURL: error?.config?.baseURL,
-//         headers: error?.config?.headers,
-//         data: error?.config?.data,
-//         request: !!error?.request,
-//         responseStatus: error?.response?.status,
-//         responseData: error?.response?.data,
-//       });
-//     } catch (e) {
-//       // ignore logging failure
-//     }
-//     return Promise.reject(error);
-//   },
-// );
 
 client.interceptors.request.use(async (config) => {
   try {
     const url = String(config?.url ?? '');
-    const isAuthRoute = [API_URL.LOGIN, API_URL.REGISTER, API_URL.TOKEN_REFRESH].some((p) =>
-      url.includes(p),
-    );
+    const isAuthRoute = [API_URL.LOGIN, API_URL.REGISTER, API_URL.TOKEN_REFRESH].includes(url);
     if (isAuthRoute) return config;
 
     const token = await storage.getItem('access_token');

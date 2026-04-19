@@ -1,6 +1,7 @@
 import React from 'react';
 import { Pressable, Text, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { COLOR } from '@/constant/color';
 
 type Point = { x: number; y: number };
 
@@ -19,7 +20,7 @@ type Props = {
 export default function GradientButton({
   children,
   onClick,
-  colors = ['#7f78fd', '#912cf9'] as const,
+  colors = [COLOR.BLUE, COLOR.PURPLE] as const,
   start = { x: 0, y: 0 },
   end = { x: 1, y: 1 },
   style,

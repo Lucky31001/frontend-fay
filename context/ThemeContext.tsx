@@ -22,9 +22,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       try {
         const v = await storage.getItem('dark_mode');
         setIsDark(v === 'true');
-      } catch {
-        // ignore
-      }
+      } catch {}
     })();
   }, []);
 
@@ -33,9 +31,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     setIsDark(next);
     try {
       await storage.setItem('dark_mode', next ? 'true' : 'false');
-    } catch {
-      // ignore
-    }
+    } catch {}
   };
 
   const paperTheme = isDark ? MD3DarkTheme : MD3LightTheme;

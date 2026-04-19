@@ -3,6 +3,7 @@ import { View, ActivityIndicator } from 'react-native';
 import { AuthProvider, AuthContext } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import Header from '@/components/Header';
+import Toast from 'react-native-toast-message';
 import { useRouter, Stack } from 'expo-router';
 import { useTheme } from 'react-native-paper';
 
@@ -36,6 +37,7 @@ function LayoutContent() {
   return (
     <>
       <Header />
+      <Toast />
       <Stack
         initialRouteName="index"
         screenOptions={{

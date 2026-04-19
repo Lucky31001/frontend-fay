@@ -16,14 +16,31 @@ export async function request({
   headers = {},
 }: RequestOptions): Promise<any> {
   try {
-    const response = await client({ method, url, data, params, headers });
+    const config: any = { method, url, headers };
+
+    if (data !== undefined) config.data = data;
+    if (params !== undefined) config.params = params;
+
+    const response = await client(config);
     return response.data;
   } catch (err: any) {
-    // Extract error message from response if available
-    // const errorMessage =
-    //   err?.response?.data?.message ||
-    //   err?.message ||
-    //   'Une erreur est survenue lors de la requête';
-    // throw new Error(errorMessage);
+    const errorMessage =
+      err?.response?.data?.message ||
+      err?.response?.data ||
+      err?.message ||
+      'Une erreur est survenue lors de la requête';
+    try {
+      const toastModule = await import('react-native-toast-message');
+      const Toast = toastModule && (toastModule.default || toastModule);
+      if (Toast && typeof Toast.show === 'function') {
+        Toast.show({
+          type: 'error',
+          text1: typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage),
+        });
+      }
+    } catch (e) {
+      // ignore if toast cannot be shown
+    }
+    throw new Error(typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage));
   }
 }

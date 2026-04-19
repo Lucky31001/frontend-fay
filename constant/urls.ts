@@ -3,5 +3,5 @@ export const API_URL = {
   REGISTER: '/api/register/',
   TOKEN_REFRESH: '/api/token/refresh/',
   EVENT: '/api/event/',
-  CREATE_EVENT: '/api/event/create/',
+  EVENT_TYPE: '/api/event-types/',
 };

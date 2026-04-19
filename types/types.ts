@@ -19,7 +19,10 @@ export interface Event {
   price: number;
   link?: string;
   description?: string;
-  event_type?: string;
+  event_type?: EventType;
   note?: number;
   capacity?: number;
+}
+export interface EventType {
+  name: string;
 }

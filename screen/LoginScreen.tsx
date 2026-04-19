@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { Alert, Pressable, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
-import { login } from '@/services/auth.service';
+import { login } from '@/services/auth';
 import { AuthContext } from '@/context/AuthContext';
 import { ROLE } from '@/constant/role';
 
@@ -30,7 +30,7 @@ export default function LoginScreen() {
         await signIn(data.access_token, data.refresh_token);
       }
     } catch (err: any) {
-      Alert.alert('Erreur', err?.message || 'Impossible de se connecter');
+      Alert.alert('Erreur', 'Impossible de se connecter');
     } finally {
       setLoading(false);
     }
@@ -82,6 +82,8 @@ export default function LoginScreen() {
           value={username}
           onChangeText={setUsername}
           autoCapitalize="none"
+          placeholderTextColor={theme.colors.onSurface}
+          keyboardAppearance={theme.dark ? 'dark' : 'light'}
           style={{
             borderWidth: 1,
             borderColor: theme.colors.outline || '#e6e9ef',
@@ -89,6 +91,7 @@ export default function LoginScreen() {
             borderRadius: 8,
             marginBottom: 12,
             backgroundColor: theme.colors.surface,
+            color: theme.colors.onSurface,
           }}
         />
 
@@ -101,6 +104,8 @@ export default function LoginScreen() {
             value={password}
             onChangeText={setPassword}
             secureTextEntry={!showPassword}
+            placeholderTextColor={theme.colors.onSurface}
+            keyboardAppearance={theme.dark ? 'dark' : 'light'}
             style={{
               flex: 1,
               borderWidth: 1,
@@ -108,6 +113,7 @@ export default function LoginScreen() {
               padding: 12,
               borderRadius: 8,
               backgroundColor: theme.colors.surface,
+              color: theme.colors.onSurface,
             }}
           />
           <Pressable onPress={() => setShowPassword((s) => !s)} style={{ marginLeft: 8 }}>

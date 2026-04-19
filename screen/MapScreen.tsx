@@ -1,10 +1,10 @@
-import { List_event } from '@/services/event.service';
+import { get_event } from '@/services/event';
 import React, { useEffect, useState } from 'react';
 import MapView, { Marker } from 'react-native-maps';
 import { View, Image, Text, ActivityIndicator } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import * as Location from 'expo-location';
-import { Event } from '@/types/api.types';
+import { Event } from '@/types/types';
 
 export default function MapScreen() {
   const [events, setEvents] = useState<Event[]>([]);
@@ -14,7 +14,7 @@ export default function MapScreen() {
 
   useEffect(() => {
     const fetchEvent = async () => {
-      const data = await List_event();
+      const data = await get_event();
       setEvents(data);
     };
     fetchEvent();

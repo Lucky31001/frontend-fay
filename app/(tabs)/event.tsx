@@ -1,5 +1,5 @@
-import EventListScreen from '@/screen/EventListScreen';
+import EventScreen from '@/screen/EventScreen';
 
-export default function EventListPage() {
-  return EventListScreen();
+export default function EventPage() {
+  return EventScreen();
 }

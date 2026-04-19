@@ -1,45 +1,118 @@
-import { View, Text, TextInput, Pressable, Alert } from 'react-native';
-import { Stack, useRouter } from 'expo-router';
+import {
+  View,
+  Text,
+  Pressable,
+  Alert,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+  TouchableWithoutFeedback,
+} from 'react-native';
+import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { useTheme } from 'react-native-paper';
-import { create_event } from '@/services/create_event.service';
+import { useTheme, IconButton, Button } from 'react-native-paper';
+import FieldInput from '@/components/FieldInput';
+import { create_event } from '@/services/event';
+import * as ImagePicker from 'expo-image-picker';
+import { Image } from 'react-native';
+import EventTypeSelector from '@/components/EventTypeSelector';
+import LocationPicker from '@/components/LocationPicker';
+import CustomCalendar from '@/components/CustomCalendar';
 
 export default function CreateEventScreen() {
   const router = useRouter();
+
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
   const [price, setPrice] = useState('');
   const [link, setLink] = useState('');
   const [description, setDescription] = useState('');
-  const [eventType, setEventType] = useState('');
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [date, setDate] = useState<string | null>(null);
   const [note, setNote] = useState('');
   const [capacity, setCapacity] = useState('');
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [image, setImage] = useState<{ uri: string; name?: string; type?: string } | null>(null);
+
+  const resetState = () => {
+    setImage(null);
+    setName('');
+    setLocation('');
+    setPrice('');
+    setLink('');
+    setDescription('');
+    setSelectedTypes([]);
+    setNote('');
+    setCapacity('');
+    setDate(null);
+    setSubmitted(false);
+  };
+  // event types are fetched inside EventTypeSelector
 
   const onSubmit = async () => {
-    if (!name || !location || !price || !link || !description || !eventType || !note || !capacity) {
-      Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+    setSubmitted(true);
+    if (
+      !name ||
+      !location ||
+      !price ||
+      !link ||
+      !description ||
+      selectedTypes.length === 0 ||
+      !date ||
+      !note ||
+      !capacity
+    ) {
+      // highlight missing fields instead of alert
       return;
     }
-    console.log('eventType : ', eventType);
-
-    const payload = {
-      name,
-      location,
-      price,
-      link,
-      description,
-      event_type: eventType,
-      note,
-      capacity,
-    };
 
     try {
       setLoading(true);
-      const data = await create_event(payload);
+      const normalizedPrice = price ? price.replace(',', '.').trim() : price;
+      const normalizedNote = note ? note.replace(',', '.').trim() : note;
+      let data;
+      if (image) {
+        const form = new FormData();
+        form.append('name', name);
+        form.append('location', location);
+        form.append('price', normalizedPrice);
+        if (date) form.append('date', date);
+        form.append('link', link);
+        form.append('description', description);
+        form.append('note', normalizedNote);
+        form.append('capacity', capacity);
+        selectedTypes.forEach((t) => form.append('event_type', t));
+
+        // append image
+        const uriParts = image.uri.split('/');
+        const fileName = image.name || uriParts[uriParts.length - 1];
+        const fileType =
+          image.type || (fileName.includes('.') ? `image/${fileName.split('.').pop()}` : 'image');
+        // @ts-ignore FormData file
+        form.append('image', { uri: image.uri, name: fileName, type: fileType });
+
+        data = await create_event(form);
+      } else {
+        const payload = {
+          name,
+          location,
+          price: normalizedPrice,
+          date,
+          link,
+          description,
+          event_type: selectedTypes,
+          note: normalizedNote,
+          capacity,
+        };
+        data = await create_event(payload);
+      }
+      console.log('Event created:', data);
       if (data) {
         Alert.alert('Succès', "L'événement a été créé avec succès");
-        // navigation to event list removed to avoid router scope issues here
+        router.push('/(tabs)/event');
+        resetState();
       }
     } catch (err: any) {
       setLoading(false);
@@ -47,131 +120,169 @@ export default function CreateEventScreen() {
     }
   };
 
+  const pickImage = async () => {
+    try {
+      const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (permission.status !== 'granted') {
+        Alert.alert('Permission refusée', "Autorisez l'accès à la galerie pour ajouter une image.");
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [3, 1],
+        quality: 0.8,
+      });
+      const canceled = (result as any).canceled ?? (result as any).cancelled ?? false;
+      if (!canceled) {
+        const uri = (result as any).uri ?? (result as any)?.assets?.[0]?.uri;
+        if (uri) setImage({ uri, name: uri.split('/').pop() });
+      }
+    } catch (e) {
+      console.error('Error picking image', e);
+    }
+  };
+
   const theme = useTheme();
-  const inputStyle = {
-    borderWidth: 1,
-    borderColor: theme.colors.outline || '#e6e9ef',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 12,
-    backgroundColor: theme.colors.surface,
-  } as const;
 
   return (
-    <>
-      <View style={{ padding: 16, backgroundColor: theme.colors.background, flex: 1 }}>
-        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
-          Nom
-        </Text>
-        <TextInput
-          placeholder="bal de promo"
-          value={name}
-          onChangeText={setName}
-          autoCapitalize="none"
-          style={inputStyle}
-        />
-        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
-          Localisation
-        </Text>
-        <TextInput
-          placeholder="Paris, France"
-          value={location}
-          onChangeText={setLocation}
-          autoCapitalize="none"
-          style={inputStyle}
-        />
-
-        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
-          Prix
-        </Text>
-        <TextInput
-          placeholder="10.00"
-          value={price}
-          onChangeText={(text) => {
-            const numeric = text.replace(/[^0-9.]/g, '');
-            setPrice(numeric);
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: theme.colors.background }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <ScrollView
+          contentContainerStyle={{
+            padding: 16,
+            flexGrow: 1,
+            backgroundColor: theme.colors.background,
           }}
-          autoCapitalize="none"
-          style={inputStyle}
-        />
-
-        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
-          lien
-        </Text>
-        <TextInput
-          placeholder="http://example.com"
-          value={link}
-          onChangeText={setLink}
-          autoCapitalize="none"
-          style={inputStyle}
-        />
-
-        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
-          description
-        </Text>
-        <TextInput
-          placeholder="Un événement génial ou il y aura plein de monde"
-          value={description}
-          onChangeText={setDescription}
-          autoCapitalize="none"
-          style={inputStyle}
-        />
-
-        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
-          type d'événement
-        </Text>
-        <TextInput
-          placeholder="Fun"
-          value={eventType}
-          onChangeText={setEventType}
-          autoCapitalize="none"
-          style={inputStyle}
-        />
-
-        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
-          note
-        </Text>
-        <TextInput
-          placeholder="note sur 5"
-          value={note}
-          onChangeText={(text) => {
-            const numeric = text.replace(/[^0-9.]/g, '');
-            setNote(numeric);
-          }}
-          autoCapitalize="none"
-          style={inputStyle}
-        />
-
-        <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
-          capacité
-        </Text>
-        <TextInput
-          placeholder="100 personnes"
-          value={capacity}
-          onChangeText={(text) => {
-            const numeric = text.replace(/[^0-9]/g, '');
-            setCapacity(numeric);
-          }}
-          autoCapitalize="none"
-          style={inputStyle}
-        />
-        <Pressable
-          onPress={onSubmit}
-          disabled={loading}
-          style={({ pressed }) => ({
-            backgroundColor: loading ? theme.colors.primary || '#a5c6ff' : theme.colors.primary,
-            paddingVertical: 12,
-            borderRadius: 8,
-            alignItems: 'center',
-            marginBottom: 12,
-            opacity: loading ? 0.7 : 1,
-          })}
+          keyboardShouldPersistTaps="handled"
         >
-          <Text style={{ color: theme.colors.onPrimary || '#fff', fontWeight: '600' }}>
-            {loading ? 'En cours...' : 'Créer l\u2019événement'}
-          </Text>
-        </Pressable>
-      </View>
-    </>
+          <IconButton
+            icon="chevron-left"
+            onPress={() => {
+              resetState();
+              router.push('/(tabs)/event');
+            }}
+          />
+          <View>
+            <View style={{ marginBottom: 12 }}>
+              <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
+                Image (optionnel)
+              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Button mode="outlined" onPress={pickImage}>
+                  Choisir une image
+                </Button>
+                {image && (
+                  <Image
+                    source={{ uri: image.uri }}
+                    style={{ width: 64, height: 64, borderRadius: 8, marginLeft: 12 }}
+                  />
+                )}
+              </View>
+            </View>
+            <FieldInput
+              label="Nom"
+              value={name}
+              onChangeText={setName}
+              placeholder="bal de promo"
+              required
+              showError={submitted}
+            />
+            <LocationPicker
+              value={location}
+              onChange={(val) => setLocation(val)}
+              showError={submitted}
+            />
+            <FieldInput
+              label="Prix"
+              value={price}
+              onChangeText={(text: string) => setPrice(text.replace(/[^0-9.,]/g, ''))}
+              placeholder="10,00"
+              keyboardType="numeric"
+              required
+              showError={submitted}
+            />
+            <FieldInput
+              label="lien"
+              value={link}
+              onChangeText={setLink}
+              placeholder="http://example.com"
+              required
+              showError={submitted}
+            />
+            <FieldInput
+              label="description"
+              value={description}
+              onChangeText={setDescription}
+              placeholder="Un événement génial ou il y aura plein de monde"
+              multiline
+              height={100}
+              required
+              showError={submitted}
+            />
+            <View style={{ marginBottom: 12 }}>
+              <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
+                Date de l'événement
+              </Text>
+              <CustomCalendar value={date} onChange={(d: string) => setDate(d)} />
+              {submitted && !date && (
+                <Text style={{ color: '#ff1744', marginTop: 6 }}>Ce champ est obligatoire</Text>
+              )}
+            </View>
+            <View style={{ marginBottom: 12 }}>
+              <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
+                Type d'événement
+              </Text>
+              <EventTypeSelector
+                value={selectedTypes}
+                onChange={setSelectedTypes}
+                showError={submitted}
+              />
+            </View>
+            <FieldInput
+              label="note"
+              value={note}
+              onChangeText={(text: string) => setNote(text.replace(/[^0-9.,]/g, ''))}
+              placeholder="note sur 5"
+              keyboardType="numeric"
+              required
+              showError={submitted}
+            />
+            <FieldInput
+              label="capacité"
+              value={capacity}
+              onChangeText={(text: string) => setCapacity(text.replace(/[^0-9]/g, ''))}
+              placeholder="100 personnes"
+              keyboardType="numeric"
+              required
+              showError={submitted}
+            />
+
+            <Pressable
+              onPress={onSubmit}
+              disabled={loading}
+              accessibilityRole="button"
+              style={({ pressed }) => ({
+                backgroundColor: theme.colors.primary,
+                paddingVertical: 12,
+                borderRadius: 8,
+                alignItems: 'center',
+                marginBottom: 12,
+                opacity: loading ? 0.7 : pressed ? 0.85 : 1,
+                marginTop: 8,
+              })}
+            >
+              <Text style={{ color: theme.colors.onPrimary || '#fff', fontWeight: '600' }}>
+                {loading ? 'En cours...' : 'Créer l\u2019événement'}
+              </Text>
+            </Pressable>
+          </View>
+        </ScrollView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 }
