@@ -154,4 +154,4 @@ Pour publier en production, créez un build Expo (via EAS ou `expo build` selon 
 - Prettier : https://prettier.io
 - Axios : https://axios-http.com
 - Ionicons : https://ionic.io/ionicons
-- Naminatim : https://nominatim.org/release-docs/latest/api/Search/
+- Nominatim : https://nominatim.org/release-docs/latest/api/Search/

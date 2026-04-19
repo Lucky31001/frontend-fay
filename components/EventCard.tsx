@@ -23,7 +23,7 @@ export default function EventCard({ event, onPress }: Props) {
         if (Array.isArray(parsed))
           typesArr = parsed.map((t) => (typeof t === 'string' ? t : (t?.name ?? String(t))));
         else typesArr = [typesRaw];
-      } catch (e) {
+      } catch {
         typesArr = [typesRaw];
       }
     } else if (typesRaw && typeof typesRaw === 'object')

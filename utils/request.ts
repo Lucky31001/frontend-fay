@@ -38,7 +38,7 @@ export async function request({
           text1: typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage),
         });
       }
-    } catch (e) {
+    } catch {
       // ignore if toast cannot be shown
     }
     throw new Error(typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage));

@@ -51,7 +51,7 @@ export default function CustomCalendar({ value, onChange }: CalendarProps) {
       const ok = status === 'granted';
       setPermissionGranted(ok);
       return ok;
-    } catch (e) {
+    } catch {
       setPermissionGranted(false);
       return false;
     }
@@ -63,7 +63,7 @@ export default function CustomCalendar({ value, onChange }: CalendarProps) {
     const dt = `${selectedDate}T${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}:00`;
     try {
       onChange && onChange(dt);
-    } catch (e) {}
+    } catch {}
   }, [selectedDate, hour, minute, onChange]);
 
   // load calendar events for the visible month (minimal, kept simple)
@@ -107,14 +107,14 @@ export default function CustomCalendar({ value, onChange }: CalendarProps) {
         marks[today] = highlight(marks[today]);
         if (selectedDate) marks[selectedDate] = highlight(marks[selectedDate]);
         if (mounted) setMarkedDates(marks);
-      } catch (e) {
+      } catch {
         if (mounted) setMarkedDates({});
       }
     })();
     return () => {
       mounted = false;
     };
-  }, [current, selectedDate, theme.colors.primary]);
+  }, [current, selectedDate, theme.colors]);
 
   // ask for permission on mount so we can show the permission UI quickly
   useEffect(() => {
@@ -127,7 +127,7 @@ export default function CustomCalendar({ value, onChange }: CalendarProps) {
   const timeValue = useMemo(() => {
     try {
       return selectedDate ? new Date(`${selectedDate}T${hour}:${minute}:00`) : new Date();
-    } catch (e) {
+    } catch {
       return new Date();
     }
   }, [selectedDate, hour, minute]);
@@ -140,7 +140,9 @@ export default function CustomCalendar({ value, onChange }: CalendarProps) {
         try {
           const l = Intl?.DateTimeFormat?.().resolvedOptions?.().locale;
           return l || 'fr-FR';
-        } catch (e) {
+        } catch (err) {
+          // If Intl fails for some reason, fallback quietly and log for debugging
+          console.error(err);
           return 'fr-FR';
         }
       })();
@@ -152,7 +154,7 @@ export default function CustomCalendar({ value, onChange }: CalendarProps) {
         hour: '2-digit',
         minute: '2-digit',
       });
-    } catch (e) {
+    } catch {
       return null;
     }
   }, [selectedDate, hour, minute]);
@@ -169,7 +171,7 @@ export default function CustomCalendar({ value, onChange }: CalendarProps) {
           }}
         >
           <Text style={{ color: theme.colors.onSurface, marginBottom: 8 }}>
-            L'application n'a pas l'autorisation d'accéder au calendrier. Activez l'accès pour
+            L’application n’a pas l’autorisation d’accéder au calendrier. Activez l’accès pour
             afficher vos événements.
           </Text>
           <View style={{ flexDirection: 'row' }}>
@@ -184,7 +186,7 @@ export default function CustomCalendar({ value, onChange }: CalendarProps) {
                 borderColor: theme.colors.primary,
               }}
             >
-              <Text style={{ color: theme.colors.primary }}>Demander l'accès</Text>
+              <Text style={{ color: theme.colors.primary }}>Demander l’accès</Text>
             </Pressable>
             <Pressable
               onPress={() => Linking.openSettings()}
@@ -272,7 +274,7 @@ export default function CustomCalendar({ value, onChange }: CalendarProps) {
               mode="time"
               is24Hour
               display={Platform.OS === 'ios' ? 'spinner' : 'default'}
-              onChange={(e, picked) => {
+              onChange={(_e, picked) => {
                 if (Platform.OS === 'android') setShowTimePicker(false);
                 if (!picked) return;
                 setHour(String(picked.getHours()).padStart(2, '0'));

@@ -4,11 +4,10 @@ import { useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { login } from '@/services/auth';
 import { AuthContext } from '@/context/AuthContext';
-import { ROLE } from '@/constant/role';
 
 export default function LoginScreen() {
   const router = useRouter();
-  const { signIn, hasRole } = useContext(AuthContext);
+  const { signIn } = useContext(AuthContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -29,7 +28,8 @@ export default function LoginScreen() {
       if (data && data.access_token) {
         await signIn(data.access_token, data.refresh_token);
       }
-    } catch (err: any) {
+    } catch (_err: any) {
+      console.error(_err);
       Alert.alert('Erreur', 'Impossible de se connecter');
     } finally {
       setLoading(false);

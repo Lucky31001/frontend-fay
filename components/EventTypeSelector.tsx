@@ -23,7 +23,7 @@ export default function EventTypeSelector({ value, onChange, showError }: Props)
         const data = await get_event_type();
         const names = (data || []).map((t: any) => t.name).filter(Boolean);
         if (mounted) setTypes(names);
-      } catch (e) {
+      } catch {
         if (mounted) setTypes([]);
       }
     })();

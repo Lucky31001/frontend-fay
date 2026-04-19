@@ -34,7 +34,7 @@ export default function LocationPicker({ value, onChange, showError }: Props) {
         );
         const json = await res.json();
         setSuggestions(json || []);
-      } catch (e) {
+      } catch {
         setSuggestions([]);
       } finally {
         setLoading(false);
@@ -72,7 +72,7 @@ export default function LocationPicker({ value, onChange, showError }: Props) {
         });
       }
       setSuggestions([]);
-    } catch (e) {
+    } catch {
       // ignore
     }
   };
@@ -81,7 +81,7 @@ export default function LocationPicker({ value, onChange, showError }: Props) {
     try {
       // Nominatim result shape includes lat/lon and display_name
       onChange(s.display_name, { latitude: Number(s.lat), longitude: Number(s.lon) });
-    } catch (e) {
+    } catch {
       onChange(s.display_name);
     } finally {
       setSuggestions([]);

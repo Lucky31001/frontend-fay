@@ -22,8 +22,8 @@ client.interceptors.request.use(async (config) => {
       if (!config.headers) config.headers = {} as any;
       (config.headers as any).Authorization = `Bearer ${token}`;
     }
-  } catch (e) {
-    console.warn('Erreur récupération token', e);
+  } catch {
+    console.warn('Erreur récupération token');
   }
   return config;
 });

@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [router]);
 
   const signIn = async (t: string, refresh?: string) => {
     await storage.setItem('access_token', t);
@@ -97,7 +97,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [token]);
 
   const hasRole = (role: ROLE) => {
-    return decodeJwtPayload(token || '')?.role == role;
+    return decodeJwtPayload(token || '')?.role === role;
   };
 
   return (

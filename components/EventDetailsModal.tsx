@@ -53,7 +53,7 @@ export default function EventDetailsModal({ visible, event, onClose }: Props) {
   let dateObj: Date | null = null;
   try {
     if (dateVal) dateObj = new Date(dateVal);
-  } catch (e) {
+  } catch {
     dateObj = null;
   }
 
@@ -78,7 +78,7 @@ export default function EventDetailsModal({ visible, event, onClose }: Props) {
       } else {
         Alert.alert('Aucune localisation disponible');
       }
-    } catch (e) {}
+    } catch {}
   };
 
   return (

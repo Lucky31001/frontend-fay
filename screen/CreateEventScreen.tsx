@@ -8,6 +8,7 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
+  Image,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -15,7 +16,6 @@ import { useTheme, IconButton, Button } from 'react-native-paper';
 import FieldInput from '@/components/FieldInput';
 import { create_event } from '@/services/event';
 import * as ImagePicker from 'expo-image-picker';
-import { Image } from 'react-native';
 import EventTypeSelector from '@/components/EventTypeSelector';
 import LocationPicker from '@/components/LocationPicker';
 import CustomCalendar from '@/components/CustomCalendar';
@@ -139,8 +139,8 @@ export default function CreateEventScreen() {
         const uri = (result as any).uri ?? (result as any)?.assets?.[0]?.uri;
         if (uri) setImage({ uri, name: uri.split('/').pop() });
       }
-    } catch (e) {
-      console.error('Error picking image', e);
+    } catch {
+      console.error('Error picking image');
     }
   };
 
@@ -226,7 +226,7 @@ export default function CreateEventScreen() {
             />
             <View style={{ marginBottom: 12 }}>
               <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
-                Date de l'événement
+                Date de l’événement
               </Text>
               <CustomCalendar value={date} onChange={(d: string) => setDate(d)} />
               {submitted && !date && (
@@ -235,7 +235,7 @@ export default function CreateEventScreen() {
             </View>
             <View style={{ marginBottom: 12 }}>
               <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
-                Type d'événement
+                Type d’événement
               </Text>
               <EventTypeSelector
                 value={selectedTypes}
