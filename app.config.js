@@ -3,9 +3,10 @@ const { config: loadEnv } = require('dotenv');
 // Attempt to load app.json if present; fall back to empty object for pure dynamic config
 let appJson = {};
 try {
-  // eslint-disable-next-line global-require, import/no-dynamic-require
+  // require dynamically if present
+  /* global-require is allowed here for dynamic optional config */
   appJson = require('./app.json');
-} catch (err) {
+} catch {
   appJson = {};
 }
 
@@ -19,10 +20,14 @@ const extra = {
   API_BASE_URL: process.env.API_BASE_URL || 'http://192.168.1.22:8000',
 };
 
+// Ensure a linking scheme is present for production builds (important for Linking)
+const scheme = process.env.SCHEME || expo.scheme || 'fay';
+
 module.exports = {
   ...(appJson || {}),
   expo: {
     ...expo,
+    scheme,
     extra,
   },
 };
