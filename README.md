@@ -132,6 +132,7 @@ npm test -- --testPathPattern=app/__tests__
 ```
 
 Conseils pour écrire des tests UI :
+
 - Utilise `findBy*` (async) si le composant fait des mises à jour d'état asynchrones au montage.
 - Mocke les modules natifs ou réseau (ex : `expo-calendar`, `expo-secure-store`, services réseau) dans `jest.setup.js` pour éviter effets de bord.
 
