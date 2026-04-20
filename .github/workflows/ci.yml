@@ -55,7 +55,7 @@ jobs:
 
       - name: Run EAS preview build (Android)
         env:
-          EAS_TOKEN: ${{ secrets.EAS_TOKEN }}
+          EXPO_TOKEN: ${{ secrets.EAS_TOKEN }}
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
           SCHEME: "fay"
           EAS_PROJECT_ID: ${{ secrets.EAS_PROJECT_ID }}
