@@ -1,28 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import MapView, { Marker } from 'react-native-maps';
 import { View, Image, Text, ActivityIndicator } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import * as Location from 'expo-location';
 
 export default function MapScreen() {
-  const [location, setLocation] = useState<Location.LocationObjectCoords>();
+  const [location, setLocation] = useState<Location.LocationObjectCoords | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const theme = useTheme();
 
   useEffect(() => {
+    let mounted = true;
+
     (async () => {
-      // Ask for location permission
-      let { status } = await Location.requestForegroundPermissionsAsync();
+      const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        setErrorMsg('Permission refusée');
+        if (mounted) setErrorMsg('Permission refusée');
         return;
       }
 
-      // Get user geolocation in real time
-      Location.watchPositionAsync(
+      const sub = await Location.watchPositionAsync(
         { accuracy: Location.Accuracy.High, distanceInterval: 5 },
-        (loc) => setLocation(loc.coords),
+        (loc) => {
+          if (mounted) setLocation(loc.coords);
+        },
       );
+
+      return () => {
+        mounted = false;
+        try {
+          sub.remove();
+        } catch (e) {
+          // ignore
+        }
+      };
     })();
   }, []);
 
@@ -57,33 +67,11 @@ export default function MapScreen() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: theme.colors.background }}>
-      <MapView
-        style={{ flex: 1 }}
-        initialRegion={{
-          latitude: location.latitude,
-          longitude: location.longitude,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      >
-        <Marker
-          coordinate={{
-            latitude: location.latitude,
-            longitude: location.longitude,
-          }}
-          style={{
-            zIndex: 1,
-          }}
-          anchor={{ x: 0.5, y: 1 }}
-        >
-          <Image
-            source={require('../assets/images/location-pin.png')}
-            style={{ width: 32, height: 32, tintColor: theme.colors.error }}
-            resizeMode="contain"
-          />
-        </Marker>
-      </MapView>
+    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.background }}>
+      <Text style={{ color: theme.colors.onSurface, marginBottom: 8 }}>Carte non disponible sur le web</Text>
+      <Image source={require('../assets/images/location-pin.png')} style={{ width: 48, height: 48, tintColor: theme.colors.error }} resizeMode="contain" />
+      <Text style={{ marginTop: 8, color: theme.colors.onSurface }}>Latitude: {location.latitude.toFixed(6)}</Text>
+      <Text style={{ color: theme.colors.onSurface }}>Longitude: {location.longitude.toFixed(6)}</Text>
     </View>
   );
 }

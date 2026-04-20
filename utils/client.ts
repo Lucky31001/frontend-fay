@@ -28,4 +28,39 @@ client.interceptors.request.use(async (config) => {
   return config;
 });
 
+// Intercept responses to handle 401 unauthorized globally
+client.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    try {
+      const status = error?.response?.status;
+      const originalRequest = error?.config ?? {};
+      const url = String(originalRequest?.url ?? '');
+      const isAuthRoute = [API_URL.LOGIN, API_URL.REGISTER, API_URL.TOKEN_REFRESH].includes(url);
+
+      if (status === 401 && !isAuthRoute) {
+        // Clear tokens and redirect to login
+        try {
+          await storage.removeItem('access_token');
+          await storage.removeItem('refresh_token');
+        } catch (e) {
+          // ignore
+        }
+
+        try {
+          // eslint-disable-next-line global-require
+          const { router } = require('expo-router');
+          if (router && typeof router.replace === 'function') {
+            router.replace('/login');
+          }
+        } catch (e) {
+        }
+      }
+    } catch (e) {
+    }
+
+    return Promise.reject(error);
+  },
+);
+
 export default client;
