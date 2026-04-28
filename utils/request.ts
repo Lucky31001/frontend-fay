@@ -32,12 +32,10 @@ export async function request({
     try {
       const toastModule = await import('react-native-toast-message');
       const Toast = toastModule && (toastModule.default || toastModule);
-      if (Toast && typeof Toast.show === 'function') {
-        Toast.show({
-          type: 'error',
-          text1: typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage),
-        });
-      }
+      Toast.show({
+        type: 'error',
+        text1: typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage),
+      });
     } catch {
       // ignore if toast cannot be shown
     }

@@ -39,7 +39,14 @@ export default function MapScreenNative() {
 
   if (errorMsg) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.background }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: theme.colors.background,
+        }}
+      >
         <ActivityIndicator size="small" color={theme.colors.primary} />
       </View>
     );
@@ -47,7 +54,14 @@ export default function MapScreenNative() {
 
   if (!location) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.background }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: theme.colors.background,
+        }}
+      >
         <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );
@@ -64,11 +78,17 @@ export default function MapScreenNative() {
           longitudeDelta: 0.0421,
         }}
       >
-        <Marker coordinate={{ latitude: location.latitude, longitude: location.longitude }} anchor={{ x: 0.5, y: 1 }}>
-          <Image source={require('../assets/images/location-pin.png')} style={{ width: 32, height: 32 }} resizeMode="contain" />
+        <Marker
+          coordinate={{ latitude: location.latitude, longitude: location.longitude }}
+          anchor={{ x: 0.5, y: 1 }}
+        >
+          <Image
+            source={require('../assets/images/location-pin.png')}
+            style={{ width: 32, height: 32 }}
+            resizeMode="contain"
+          />
         </Marker>
       </MapView>
     </View>
   );
 }
-

@@ -67,11 +67,28 @@ export default function MapScreen() {
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.background }}>
-      <Text style={{ color: theme.colors.onSurface, marginBottom: 8 }}>Carte non disponible sur le web</Text>
-      <Image source={require('../assets/images/location-pin.png')} style={{ width: 48, height: 48, tintColor: theme.colors.error }} resizeMode="contain" />
-      <Text style={{ marginTop: 8, color: theme.colors.onSurface }}>Latitude: {location.latitude.toFixed(6)}</Text>
-      <Text style={{ color: theme.colors.onSurface }}>Longitude: {location.longitude.toFixed(6)}</Text>
+    <View
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: theme.colors.background,
+      }}
+    >
+      <Text style={{ color: theme.colors.onSurface, marginBottom: 8 }}>
+        Carte non disponible sur le web
+      </Text>
+      <Image
+        source={require('../assets/images/location-pin.png')}
+        style={{ width: 48, height: 48, tintColor: theme.colors.error }}
+        resizeMode="contain"
+      />
+      <Text style={{ marginTop: 8, color: theme.colors.onSurface }}>
+        Latitude: {location.latitude.toFixed(6)}
+      </Text>
+      <Text style={{ color: theme.colors.onSurface }}>
+        Longitude: {location.longitude.toFixed(6)}
+      </Text>
     </View>
   );
 }
