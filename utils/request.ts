@@ -34,7 +34,7 @@ export async function request({
       const Toast = toastModule && (toastModule.default || toastModule);
       Toast.show({
         type: 'error',
-        text1: typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage),
+        text1: errorMessage.error,
       });
     } catch {
       // ignore if toast cannot be shown
