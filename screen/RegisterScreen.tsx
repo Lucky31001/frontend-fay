@@ -194,7 +194,7 @@ export default function RegisterScreen() {
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ marginRight: 10, color: theme.colors.onSurface }}>Créateur</Text>
+            <Text style={{ marginRight: 10, color: theme.colors.onSurface }}>Role utilisateur</Text>
             <Switch value={isCreator} onValueChange={setIsCreator} />
           </View>
 
