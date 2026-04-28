@@ -5,12 +5,18 @@ import * as eventService from '@/services/event';
 
 jest.mock('@/services/event');
 
+
 const mockEvent = {
   id: 1,
   name: 'Soirée Test',
   location: 'Paris',
   price: 10,
 };
+
+const mockEventTypes = [
+  { id: 1, name: 'Soirée' },
+  { id: 2, name: 'Sport' },
+];
 
 describe('EventScreen', () => {
   beforeEach(() => {
@@ -30,6 +36,24 @@ describe('EventScreen', () => {
     expect(getByText('Paris')).toBeTruthy();
 
     expect(getByText('10€')).toBeTruthy();
+  });
+});
+
+describe('EventScreen - Get Event Types', () => {
+  beforeEach(() => {
+    (eventService.get_event_type as jest.Mock).mockResolvedValue(mockEventTypes);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('fetches event types and returns them correctly', async () => {
+    const result = await eventService.get_event_type();
+
+    expect(result).toEqual(mockEventTypes);
+    
+    expect(eventService.get_event_type).toHaveBeenCalledTimes(1);
   });
 });
 
