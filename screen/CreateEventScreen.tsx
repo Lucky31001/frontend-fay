@@ -10,8 +10,8 @@ import {
   TouchableWithoutFeedback,
   Image,
 } from 'react-native';
-import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useRouter, useFocusEffect } from 'expo-router';
+import { useState, useCallback } from 'react';
 import { useTheme, IconButton, Button } from 'react-native-paper';
 import FieldInput from '@/components/FieldInput';
 import { create_event } from '@/services/event';
@@ -83,7 +83,7 @@ export default function CreateEventScreen() {
         form.append('description', description);
         form.append('note', normalizedNote);
         form.append('capacity', capacity);
-        selectedTypes.forEach((t) => form.append('event_type', t));
+        selectedTypes.forEach((t) => form.append('event_type[]', t));
 
         // append image
         const uriParts = image.uri.split('/');
@@ -110,9 +110,9 @@ export default function CreateEventScreen() {
       }
       console.log('Event created:', data);
       if (data) {
+        resetState();
         Alert.alert('Succès', "L'événement a été créé avec succès");
         router.push('/(tabs)/event');
-        resetState();
       }
     } catch (err: any) {
       setLoading(false);
