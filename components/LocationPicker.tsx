@@ -43,6 +43,7 @@ export default function LocationPicker({ value, onChange, showError }: Props) {
   };
 
   const useMyPosition = async () => {
+    setLoading(true);
     try {
       const { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') return;
@@ -71,6 +72,7 @@ export default function LocationPicker({ value, onChange, showError }: Props) {
           longitude: pos.coords.longitude,
         });
       }
+      setLoading(false);
       setSuggestions([]);
     } catch {
       // ignore
@@ -153,9 +155,11 @@ export default function LocationPicker({ value, onChange, showError }: Props) {
       )}
 
       <View style={{ flexDirection: 'row', marginTop: 8, gap: 8 }}>
-        <Button mode="outlined" onPress={useMyPosition} style={{ marginRight: 8 }}>
-          Utiliser ma position
-        </Button>
+        { !loading && (
+            <Button mode="outlined" onPress={useMyPosition} style={{ marginRight: 8 }}>
+              Utiliser ma position
+            </Button>
+        )}
       </View>
     </View>
   );
