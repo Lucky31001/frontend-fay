@@ -81,7 +81,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (refresh) await storage.setItem('refresh_token', refresh);
     setToken(t);
     setIsAuthenticated(true);
-    router.push('/(tabs)/agenda');
   };
 
   const signOut = async () => {

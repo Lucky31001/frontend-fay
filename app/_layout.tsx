@@ -49,7 +49,8 @@ function LayoutContent() {
       >
         <Stack.Screen name="index" options={{ headerShown: false, title: 'Register' }} />
         <Stack.Screen name="login" options={{ headerShown: false, title: 'Login' }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false, title: 'Nav' }} />
+          <Stack.Screen name="profile" options={{ headerShown: false, title: 'Creation du profile' }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false, title: 'Nav' }} />
       </Stack>
     </>
   );
