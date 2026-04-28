@@ -31,4 +31,3 @@ describe('EventScreen', () => {
     expect(getByText('10€')).toBeTruthy();
   });
 });
-

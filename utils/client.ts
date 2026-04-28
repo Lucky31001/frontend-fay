@@ -53,11 +53,9 @@ client.interceptors.response.use(
           if (router && typeof router.replace === 'function') {
             router.replace('/login');
           }
-        } catch (e) {
-        }
+        } catch (e) {}
       }
-    } catch (e) {
-    }
+    } catch (e) {}
 
     return Promise.reject(error);
   },

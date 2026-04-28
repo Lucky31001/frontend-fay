@@ -1,53 +1,48 @@
 /* global jest */
+const React = require('react');
+const { Text } = require('react-native');
 
+// ─── Expo & Navigation ────────────────────────────────────────────────────────
 jest.mock('expo', () => ({}));
 jest.mock('expo-constants', () => ({ manifest: {} }));
+jest.mock('expo-router', () => ({ useRouter: () => ({ push: jest.fn(), replace: jest.fn() }) }));
 jest.mock('expo-secure-store', () => ({
   getItemAsync: jest.fn(async () => null),
   setItemAsync: jest.fn(async () => {}),
   deleteItemAsync: jest.fn(async () => {}),
 }));
-
-jest.mock('expo-router', () => ({
-  useRouter: () => ({ push: jest.fn(), replace: jest.fn() }),
+jest.mock('expo-calendar', () => ({
+  requestCalendarPermissionsAsync: jest.fn(async () => ({ status: 'granted' })),
+  getCalendarsAsync: jest.fn(async () => []),
+  getEventsAsync: jest.fn(async () => []),
+  EntityTypes: { EVENT: 'event' },
 }));
 
-// Ensure navigation focus effects run in tests so screens fetch data immediately
+// Run focus effects immediately so screens fetch data in tests
 jest.mock('@react-navigation/native', () => ({
-  // Minimal mock: schedule the provided focus effect to run asynchronously so it happens after mount
   useFocusEffect: (cb) => {
     try {
       setTimeout(() => {
         try {
           cb();
-        } catch (e) {
-          // ignore
-        }
+        } catch {}
       }, 0);
-    } catch (e) {
-      // ignore
-    }
-    return undefined;
+    } catch {}
   },
 }));
 
-// Mock AuthContext with common helpers used in screens (hasRole, signIn, signOut)
-jest.mock('@/context/AuthContext', () => {
-  const React = require('react');
-  return {
-    AuthContext: React.createContext({
-      signIn: jest.fn(),
-      signOut: jest.fn(),
-      hasRole: () => false,
-    }),
-  };
-});
-
-// Mock services / storage
-// The real service file is at '@/services/auth'
+// ─── App Context & Services ───────────────────────────────────────────────────
+jest.mock('@/context/AuthContext', () => ({
+  AuthContext: React.createContext({ signIn: jest.fn(), signOut: jest.fn(), hasRole: () => false }),
+}));
 jest.mock('@/services/auth', () => ({
   register: jest.fn(async () => ({ access_token: null, refresh_token: null })),
   login: jest.fn(async () => ({ access_token: null, refresh_token: null })),
+}));
+jest.mock('@/services/event', () => ({
+  get_event: jest.fn(async () => []),
+  get_event_type: jest.fn(async () => []),
+  create_event: jest.fn(async () => ({})),
 }));
 jest.mock('@/utils/storage', () => ({
   storage: {
@@ -57,53 +52,44 @@ jest.mock('@/utils/storage', () => ({
   },
 }));
 
-// Provide a default mock for event service; tests can override this with jest.mock in specific suites
-jest.mock('@/services/event', () => ({
-  get_event: jest.fn(async () => []),
-  get_event_type: jest.fn(async () => []),
-  create_event: jest.fn(async () => ({})),
-}));
+// ─── UI Components ────────────────────────────────────────────────────────────
+const mockComponent =
+  (testId, content = () => null) =>
+  (props) =>
+    React.createElement(Text, { 'data-testid': testId, ...props }, content(props));
 
-// Mock native modules used by CustomCalendar to avoid async state updates during mount
-jest.mock('expo-calendar', () => ({
-  requestCalendarPermissionsAsync: jest.fn(async () => ({ status: 'granted' })),
-  getCalendarsAsync: jest.fn(async () => []),
-  getEventsAsync: jest.fn(async () => []),
-  EntityTypes: { EVENT: 'event' },
-}));
-
-// Simplified Ionicons mock
 jest.mock('@expo/vector-icons/Ionicons', () => {
-  const React = require('react');
-  const IoniconsMock = (props) =>
+  const Mock = (props) =>
     React.createElement(
-      'Text',
+      Text,
       { 'data-testid': 'ionicon', style: { color: props.color, fontSize: props.size } },
       props.name,
     );
-  IoniconsMock.displayName = 'IoniconsMock';
-  return IoniconsMock;
+  Mock.displayName = 'IoniconsMock';
+  return Mock;
 });
-
-// Mock react-native-paper theme and simple components used in screens so tests don't need a Provider
-jest.mock('react-native-paper', () => {
-  const React = require('react');
-  const { Text } = require('react-native');
-  const useTheme = () => ({
-    colors: { background: '#fff', onSurface: '#000', surface: '#fff', outline: '#ccc', primary: '#6200ee', error: '#b00020' },
-  });
-
-  const IconButton = (props) => React.createElement(Text, { onPress: props.onPress, 'data-testid': 'icon-button' }, props.icon || 'icon');
-  const Button = (props) => React.createElement(Text, { onPress: props.onPress, 'data-testid': 'button' }, props.children);
-
-  return { useTheme, IconButton, Button };
-});
-
-// Minimal DateTimePicker mock
 jest.mock('@react-native-community/datetimepicker', () => {
-  const React = require('react');
-  const DateTimePickerMock = (props) =>
-    React.createElement('Text', { 'data-testid': 'datetimepicker' }, 'datetime');
-  DateTimePickerMock.displayName = 'DateTimePickerMock';
-  return DateTimePickerMock;
+  const Mock = () => React.createElement(Text, { 'data-testid': 'datetimepicker' }, 'datetime');
+  Mock.displayName = 'DateTimePickerMock';
+  return Mock;
 });
+jest.mock('react-native-paper', () => ({
+  useTheme: () => ({
+    colors: {
+      background: '#fff',
+      onSurface: '#000',
+      surface: '#fff',
+      outline: '#ccc',
+      primary: '#6200ee',
+      error: '#b00020',
+    },
+  }),
+  IconButton: (props) =>
+    React.createElement(
+      Text,
+      { onPress: props.onPress, 'data-testid': 'icon-button' },
+      props.icon ?? 'icon',
+    ),
+  Button: (props) =>
+    React.createElement(Text, { onPress: props.onPress, 'data-testid': 'button' }, props.children),
+}));
