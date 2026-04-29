@@ -11,8 +11,8 @@ import {
   Image,
   ActivityIndicator,
 } from 'react-native';
-import { useRouter, useFocusEffect } from 'expo-router';
-import { useState, useCallback } from 'react';
+import { useRouter } from 'expo-router';
+import { useState } from 'react';
 import { useTheme, IconButton, Button } from 'react-native-paper';
 import FieldInput from '@/components/FieldInput';
 import { create_event } from '@/services/event';

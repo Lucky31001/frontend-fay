@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* global jest */
 const React = require('react');
 const { Text } = require('react-native');
@@ -53,10 +54,6 @@ jest.mock('@/utils/storage', () => ({
 }));
 
 // ─── UI Components ────────────────────────────────────────────────────────────
-const mockComponent =
-  (testId, content = () => null) =>
-  (props) =>
-    React.createElement(Text, { 'data-testid': testId, ...props }, content(props));
 
 jest.mock('@expo/vector-icons/Ionicons', () => {
   const Mock = (props) =>

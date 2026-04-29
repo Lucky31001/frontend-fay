@@ -30,7 +30,7 @@ export default function MapScreenNative() {
         mounted = false;
         try {
           sub.remove();
-        } catch (e) {
+        } catch {
           // ignore
         }
       };

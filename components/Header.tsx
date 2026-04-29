@@ -3,7 +3,7 @@ import { View, Text, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeContext } from '@/context/ThemeContext';
 import { useTheme, IconButton, Menu } from 'react-native-paper';
-import { useSegments, useRouter, usePathname } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { AuthContext } from '@/context/AuthContext';
 import GradientButton from '@/components/GradientButton';
 import {get_profile} from "@/services/profile";
@@ -15,8 +15,6 @@ export default function Header() {
   const { signOut, username } = useContext(AuthContext);
   const [profile, setProfile] = useState<Profile | null>();
   const theme = useTheme();
-  const segments = useSegments();
-  const current = String(segments[segments.length - 1] ?? '');
   const router = useRouter();
   const [menuVisible, setMenuVisible] = React.useState(false);
 
@@ -24,7 +22,7 @@ export default function Header() {
         try {
             const data = await get_profile();
             setProfile(data || null);
-        } catch (err: any) {
+        } catch {
             setProfile(null);
         }
     }, []);

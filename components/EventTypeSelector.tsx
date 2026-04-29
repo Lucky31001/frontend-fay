@@ -17,7 +17,7 @@ export default function EventTypeSelector({ value, onChange, showError }: Props)
   const [custom, setCustom] = useState('');
 
   useEffect(() => {
-    if (value.length == 0) {
+    if (value.length === 0) {
       let mounted = true;
       (async () => {
         try {
@@ -32,7 +32,7 @@ export default function EventTypeSelector({ value, onChange, showError }: Props)
         mounted = false;
       };
     }
-  }, [showError]);
+  }, [showError, value.length]);
 
   const filtered = types.filter((t) => t.toLowerCase().includes(search.toLowerCase()));
 

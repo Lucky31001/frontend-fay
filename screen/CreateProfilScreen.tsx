@@ -13,12 +13,10 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
-import { useTheme, IconButton, Button } from 'react-native-paper';
+import { useTheme, Button } from 'react-native-paper';
 import FieldInput from '@/components/FieldInput';
 import * as ImagePicker from 'expo-image-picker';
 import EventTypeSelector from '@/components/EventTypeSelector';
-import LocationPicker from '@/components/LocationPicker';
-import CustomCalendar from '@/components/CustomCalendar';
 import {create_profile} from "@/services/profile";
 
 export default function CreateProfilScreen() {

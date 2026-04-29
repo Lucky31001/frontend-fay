@@ -1,30 +1,11 @@
-import React, {useContext, useEffect} from 'react';
-import { View, ActivityIndicator } from 'react-native';
-import { AuthProvider, AuthContext } from '@/context/AuthContext';
+import React from 'react';
+import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
-import Header from '@/components/Header';
-import Toast from 'react-native-toast-message';
-import { useRouter, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useTheme } from 'react-native-paper';
+import Toast from "react-native-toast-message";
 
 export default function RootLayout() {
-  const { loading, isAuthenticated } = useContext(AuthContext);
-  const router = useRouter();
-
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
-
-    useEffect(() => {
-        if (!loading && isAuthenticated) {
-            router.replace('/(tabs)/agenda');
-        }
-    }, [loading, isAuthenticated]);
-
   return (
     <AuthProvider>
       <ThemeProvider>
