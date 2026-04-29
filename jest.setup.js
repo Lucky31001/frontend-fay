@@ -1,30 +1,46 @@
+/* eslint-disable no-unused-vars */
 /* global jest */
+const { Text } = require('react-native');
+const React = require('react');
 
+// ─── Expo & Navigation ────────────────────────────────────────────────────────
 jest.mock('expo', () => ({}));
 jest.mock('expo-constants', () => ({ manifest: {} }));
+jest.mock('expo-router', () => ({ useRouter: () => ({ push: jest.fn(), replace: jest.fn() }) }));
 jest.mock('expo-secure-store', () => ({
   getItemAsync: jest.fn(async () => null),
   setItemAsync: jest.fn(async () => {}),
   deleteItemAsync: jest.fn(async () => {}),
 }));
-
-jest.mock('expo-router', () => ({
-  useRouter: () => ({ push: jest.fn(), replace: jest.fn() }),
+jest.mock('expo-calendar', () => ({
+  requestCalendarPermissionsAsync: jest.fn(async () => ({ status: 'granted' })),
+  getCalendarsAsync: jest.fn(async () => []),
+  getEventsAsync: jest.fn(async () => []),
+  EntityTypes: { EVENT: 'event' },
+}));
+jest.mock('@react-navigation/native', () => ({
+  useFocusEffect: (cb) => {
+    try {
+      setTimeout(() => { try { cb(); } catch {} }, 0);
+    } catch {}
+  },
 }));
 
-// Mock AuthContext
+// ─── App Context & Services ───────────────────────────────────────────────────
 jest.mock('@/context/AuthContext', () => {
   const React = require('react');
   return {
-    AuthContext: React.createContext({ signIn: jest.fn() }),
+    AuthContext: React.createContext({ signIn: jest.fn(), signOut: jest.fn(), hasRole: () => false }),
   };
 });
-
-// Mock services / storage
-// The real service file is at '@/services/auth'
 jest.mock('@/services/auth', () => ({
   register: jest.fn(async () => ({ access_token: null, refresh_token: null })),
   login: jest.fn(async () => ({ access_token: null, refresh_token: null })),
+}));
+jest.mock('@/services/event', () => ({
+  get_event: jest.fn(async () => []),
+  get_event_type: jest.fn(async () => []),
+  create_event: jest.fn(async () => ({})),
 }));
 jest.mock('@/utils/storage', () => ({
   storage: {
@@ -34,32 +50,51 @@ jest.mock('@/utils/storage', () => ({
   },
 }));
 
-// Mock native modules used by CustomCalendar to avoid async state updates during mount
-jest.mock('expo-calendar', () => ({
-  requestCalendarPermissionsAsync: jest.fn(async () => ({ status: 'granted' })),
-  getCalendarsAsync: jest.fn(async () => []),
-  getEventsAsync: jest.fn(async () => []),
-  EntityTypes: { EVENT: 'event' },
-}));
-
-// Simplified Ionicons mock
+// ─── UI Components ────────────────────────────────────────────────────────────
 jest.mock('@expo/vector-icons/Ionicons', () => {
   const React = require('react');
-  const IoniconsMock = (props) =>
-    React.createElement(
-      'Text',
-      { 'data-testid': 'ionicon', style: { color: props.color, fontSize: props.size } },
-      props.name,
-    );
-  IoniconsMock.displayName = 'IoniconsMock';
-  return IoniconsMock;
+  const { Text } = require('react-native');
+  const Mock = (props) =>
+      React.createElement(
+          Text,
+          { 'data-testid': 'ionicon', style: { color: props.color, fontSize: props.size } },
+          props.name,
+      );
+  Mock.displayName = 'IoniconsMock';
+  return Mock;
 });
-
-// Minimal DateTimePicker mock
 jest.mock('@react-native-community/datetimepicker', () => {
   const React = require('react');
-  const DateTimePickerMock = (props) =>
-    React.createElement('Text', { 'data-testid': 'datetimepicker' }, 'datetime');
-  DateTimePickerMock.displayName = 'DateTimePickerMock';
-  return DateTimePickerMock;
+  const { Text } = require('react-native');
+  const Mock = () => React.createElement(Text, { 'data-testid': 'datetimepicker' }, 'datetime');
+  Mock.displayName = 'DateTimePickerMock';
+  return Mock;
+});
+jest.mock('react-native-paper', () => {
+  const React = require('react');
+  const { Text } = require('react-native');
+  return {
+    useTheme: () => ({
+      colors: {
+        background: '#fff',
+        onSurface: '#000',
+        surface: '#fff',
+        outline: '#ccc',
+        primary: '#6200ee',
+        error: '#b00020',
+      },
+    }),
+    IconButton: (props) =>
+        React.createElement(
+            Text,
+            { onPress: props.onPress, 'data-testid': 'icon-button' },
+            props.icon ?? 'icon',
+        ),
+    Button: (props) =>
+        React.createElement(
+            Text,
+            { onPress: props.onPress, 'data-testid': 'button' },
+            props.children,
+        ),
+  };
 });

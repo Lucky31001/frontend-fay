@@ -9,6 +9,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useState } from 'react';
@@ -48,8 +49,8 @@ export default function CreateEventScreen() {
     setCapacity('');
     setDate(null);
     setSubmitted(false);
+    setLoading(false);
   };
-  // event types are fetched inside EventTypeSelector
 
   const onSubmit = async () => {
     setSubmitted(true);
@@ -57,14 +58,11 @@ export default function CreateEventScreen() {
       !name ||
       !location ||
       !price ||
-      !link ||
-      !description ||
       selectedTypes.length === 0 ||
       !date ||
       !note ||
       !capacity
     ) {
-      // highlight missing fields instead of alert
       return;
     }
 
@@ -83,9 +81,8 @@ export default function CreateEventScreen() {
         form.append('description', description);
         form.append('note', normalizedNote);
         form.append('capacity', capacity);
-        selectedTypes.forEach((t) => form.append('event_type', t));
+        selectedTypes.forEach((type) => form.append('event_type', type));
 
-        // append image
         const uriParts = image.uri.split('/');
         const fileName = image.name || uriParts[uriParts.length - 1];
         const fileType =
@@ -110,9 +107,9 @@ export default function CreateEventScreen() {
       }
       console.log('Event created:', data);
       if (data) {
+        resetState();
         Alert.alert('Succès', "L'événement a été créé avec succès");
         router.push('/(tabs)/event');
-        resetState();
       }
     } catch (err: any) {
       setLoading(false);
@@ -170,7 +167,7 @@ export default function CreateEventScreen() {
           <View>
             <View style={{ marginBottom: 12 }}>
               <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
-                Image (optionnel)
+                Image
               </Text>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Button mode="outlined" onPress={pickImage}>
@@ -211,7 +208,6 @@ export default function CreateEventScreen() {
               value={link}
               onChangeText={setLink}
               placeholder="http://example.com"
-              required
               showError={submitted}
             />
             <FieldInput
@@ -221,7 +217,6 @@ export default function CreateEventScreen() {
               placeholder="Un événement génial ou il y aura plein de monde"
               multiline
               height={100}
-              required
               showError={submitted}
             />
             <View style={{ marginBottom: 12 }}>
@@ -230,7 +225,7 @@ export default function CreateEventScreen() {
               </Text>
               <CustomCalendar value={date} onChange={(d: string) => setDate(d)} />
               {submitted && !date && (
-                <Text style={{ color: '#ff1744', marginTop: 6 }}>Ce champ est obligatoire</Text>
+                <Text style={{ color: theme.colors.error, marginTop: 6 }}>Ce champ est obligatoire</Text>
               )}
             </View>
             <View style={{ marginBottom: 12 }}>
@@ -261,7 +256,9 @@ export default function CreateEventScreen() {
               required
               showError={submitted}
             />
-
+            <Text style={{ color: theme.colors.onSurface, fontWeight: '400' }}>
+              Champs nécessaire : *
+            </Text>
             <Pressable
               onPress={onSubmit}
               disabled={loading}
@@ -272,13 +269,23 @@ export default function CreateEventScreen() {
                 borderRadius: 8,
                 alignItems: 'center',
                 marginBottom: 12,
-                opacity: loading ? 0.7 : pressed ? 0.85 : 1,
+                opacity: loading ? 0.8 : pressed ? 0.85 : 1,
                 marginTop: 8,
+                flexDirection: 'row',
+                justifyContent: 'center',
               })}
             >
-              <Text style={{ color: theme.colors.onPrimary || '#fff', fontWeight: '600' }}>
-                {loading ? 'En cours...' : 'Créer l\u2019événement'}
-              </Text>
+              {loading ? (
+                <ActivityIndicator
+                  size="small"
+                  color={(theme.colors as any).onPrimary || '#fff'}
+                  accessibilityLabel="loading"
+                />
+              ) : (
+                <Text style={{ color: theme.colors.onPrimary || '#fff', fontWeight: '600' }}>
+                  Créer lévénement
+                </Text>
+              )}
             </Pressable>
           </View>
         </ScrollView>

@@ -40,7 +40,7 @@ export default function FieldInput({
   return (
     <>
       <Text style={{ marginBottom: 6, color: theme.colors.onSurface, fontWeight: '500' }}>
-        {label}
+        {label} {required && "*"}
       </Text>
       <TextInput
         placeholder={placeholder}

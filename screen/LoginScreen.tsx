@@ -28,6 +28,7 @@ export default function LoginScreen() {
       if (data && data.access_token) {
         await signIn(data.access_token, data.refresh_token);
       }
+      router.push('/(tabs)/agenda');
     } catch (_err: any) {
       console.error(_err);
       Alert.alert('Erreur', 'Impossible de se connecter');

@@ -24,6 +24,7 @@ export async function request({
     const response = await client(config);
     return response.data;
   } catch (err: any) {
+    console.log('Request error:', err);
     const errorMessage =
       err?.response?.data?.message ||
       err?.response?.data ||
@@ -32,12 +33,10 @@ export async function request({
     try {
       const toastModule = await import('react-native-toast-message');
       const Toast = toastModule && (toastModule.default || toastModule);
-      if (Toast && typeof Toast.show === 'function') {
-        Toast.show({
-          type: 'error',
-          text1: typeof errorMessage === 'string' ? errorMessage : JSON.stringify(errorMessage),
-        });
-      }
+      Toast.show({
+        type: 'error',
+        text1: errorMessage,
+      });
     } catch {
       // ignore if toast cannot be shown
     }
