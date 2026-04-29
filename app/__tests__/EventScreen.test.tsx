@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, waitFor } from '@testing-library/react-native';
 import EventScreen from '@/screen/EventScreen';
 import * as eventService from '@/services/event';
