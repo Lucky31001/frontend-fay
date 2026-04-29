@@ -9,6 +9,7 @@ export const get_event = async (): Promise<Event[]> => {
 export const get_event_type = async (): Promise<EventType[]> => {
   return await requestGet(API_URL.EVENT_TYPE);
 };
+
 export const create_event = async (payload: any, headers?: Record<string, any>): Promise<Event> => {
   return await requestPost(API_URL.EVENT, payload, headers);
 };
