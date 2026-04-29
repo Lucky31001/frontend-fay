@@ -10,6 +10,7 @@ type AuthContextType = {
   signOut: () => Promise<void>;
   isAuthenticated: boolean;
   hasRole: (role: ROLE) => boolean;
+  username: string
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -19,6 +20,7 @@ export const AuthContext = createContext<AuthContextType>({
   signOut: async () => {},
   isAuthenticated: false,
   hasRole: () => false,
+  username: '',
 });
 
 function decodeJwtPayload(token: string): any | null {
@@ -55,6 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState('');
 
   useEffect(() => {
     (async () => {
@@ -62,6 +65,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const t = await storage.getItem('access_token');
         if (t && !isJwtExpired(t)) {
           setToken(t);
+          setUsername(decodeJwtPayload(t)?.username || '');
           setIsAuthenticated(true);
           router.push('/(tabs)/agenda');
         } else {
@@ -81,7 +85,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (refresh) await storage.setItem('refresh_token', refresh);
     setToken(t);
     setIsAuthenticated(true);
-    router.push('/(tabs)/agenda');
   };
 
   const signOut = async () => {
@@ -101,7 +104,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ token, loading, signIn, signOut, isAuthenticated, hasRole }}>
+    <AuthContext.Provider value={{ token, loading, signIn, signOut, isAuthenticated, hasRole, username }}>
       {children}
     </AuthContext.Provider>
   );
