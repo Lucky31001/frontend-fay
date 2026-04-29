@@ -70,6 +70,7 @@ export default function CustomCalendar({ value, onChange }: { value?: string, on
     })();
   }, [currentMonth, selectedDate]);
 
+  // Filtrage des événements pour la date sélectionnée
   const dayEvents = allEvents.filter(ev => isoDate(new Date(ev.startDate)) === selectedDate);
 
   return (
