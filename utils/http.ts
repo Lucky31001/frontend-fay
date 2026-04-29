@@ -2,7 +2,7 @@ import { request } from './request';
 
 export const requestGet = (
   url: string,
-  params?: Record<string, any>,
+  params?: any,
   headers?: Record<string, any>,
 ) => request({ method: 'get', url, params, headers });
 

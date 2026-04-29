@@ -1,28 +1,11 @@
-import React, { useContext } from 'react';
-import { View, ActivityIndicator } from 'react-native';
-import { AuthProvider, AuthContext } from '@/context/AuthContext';
+import React from 'react';
+import { AuthProvider } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
-import Header from '@/components/Header';
-import Toast from 'react-native-toast-message';
-import { useRouter, Stack } from 'expo-router';
+import { Stack } from 'expo-router';
 import { useTheme } from 'react-native-paper';
+import Toast from "react-native-toast-message";
 
 export default function RootLayout() {
-  const { loading, isAuthenticated } = useContext(AuthContext);
-  const router = useRouter();
-
-  if (loading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
-
-  if (isAuthenticated) {
-    router.replace('/(tabs)/agenda');
-  }
-
   return (
     <AuthProvider>
       <ThemeProvider>
@@ -36,10 +19,9 @@ function LayoutContent() {
   const theme = useTheme();
   return (
     <>
-      <Header />
       <Toast />
       <Stack
-        initialRouteName="index"
+        initialRouteName="login"
         screenOptions={{
           headerShown: false,
           headerStyle: { backgroundColor: theme.colors.surface },
@@ -49,7 +31,8 @@ function LayoutContent() {
       >
         <Stack.Screen name="index" options={{ headerShown: false, title: 'Register' }} />
         <Stack.Screen name="login" options={{ headerShown: false, title: 'Login' }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false, title: 'Nav' }} />
+          <Stack.Screen name="profile" options={{ headerShown: false, title: 'Creation du profile' }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false, title: 'Nav' }} />
       </Stack>
     </>
   );

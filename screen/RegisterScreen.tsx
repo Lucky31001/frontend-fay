@@ -56,6 +56,12 @@ export default function RegisterScreen() {
       if (data && data.access_token) {
         await signIn(data.access_token, data.refresh_token);
       }
+      if ( isCreator ) {
+          router.push('/profile');
+      }
+      else {
+          router.push('/(tabs)/agenda');
+      }
     } catch (err: any) {
       Alert.alert('Erreur', err?.message || "Impossible de s'inscrire");
     } finally {
@@ -194,7 +200,7 @@ export default function RegisterScreen() {
           }}
         >
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Text style={{ marginRight: 10, color: theme.colors.onSurface }}>Créateur</Text>
+            <Text style={{ marginRight: 10, color: theme.colors.onSurface }}>Role utilisateur</Text>
             <Switch value={isCreator} onValueChange={setIsCreator} />
           </View>
 

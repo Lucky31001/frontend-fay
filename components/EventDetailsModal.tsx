@@ -30,7 +30,7 @@ function renderTypes(raw: any) {
     <View
       key={t}
       style={{
-        backgroundColor: 'rgba(0,0,0,0.6)',
+        backgroundColor: 'rgba(241, 147, 26, 0.8)',
         paddingHorizontal: 8,
         paddingVertical: 4,
         borderRadius: 12,

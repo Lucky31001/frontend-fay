@@ -17,20 +17,22 @@ export default function EventTypeSelector({ value, onChange, showError }: Props)
   const [custom, setCustom] = useState('');
 
   useEffect(() => {
-    let mounted = true;
-    (async () => {
-      try {
-        const data = await get_event_type();
-        const names = (data || []).map((t: any) => t.name).filter(Boolean);
-        if (mounted) setTypes(names);
-      } catch {
-        if (mounted) setTypes([]);
-      }
-    })();
-    return () => {
-      mounted = false;
-    };
-  }, []);
+    if (value.length === 0) {
+      let mounted = true;
+      (async () => {
+        try {
+          const data = await get_event_type();
+          const names = (data || []).map((t: any) => t.name);
+          if (mounted) setTypes(names);
+        } catch {
+          if (mounted) setTypes([]);
+        }
+      })();
+      return () => {
+        mounted = false;
+      };
+    }
+  }, [showError, value.length]);
 
   const filtered = types.filter((t) => t.toLowerCase().includes(search.toLowerCase()));
 

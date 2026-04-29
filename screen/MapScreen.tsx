@@ -29,7 +29,7 @@ export default function MapScreen() {
         mounted = false;
         try {
           sub.remove();
-        } catch (e) {
+        } catch {
           // ignore
         }
       };

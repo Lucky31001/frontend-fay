@@ -23,6 +23,15 @@ export interface Event {
   note?: number;
   capacity?: number;
 }
+
+export interface Profile {
+    id: number;
+    name: string;
+    description?: string;
+    image?: string;
+    event_type?: EventType;
+}
+
 export interface EventType {
   name: string;
 }
