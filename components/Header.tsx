@@ -1,21 +1,39 @@
-import React, { useContext } from 'react';
-import { View, Text } from 'react-native';
+import React, {useCallback, useContext, useState} from 'react';
+import { View, Text, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemeContext } from '@/context/ThemeContext';
 import { useTheme, IconButton, Menu } from 'react-native-paper';
-import { useSegments, useRouter } from 'expo-router';
+import { useSegments, useRouter, usePathname } from 'expo-router';
 import { AuthContext } from '@/context/AuthContext';
 import GradientButton from '@/components/GradientButton';
+import {get_profile} from "@/services/profile";
+import {Profile} from "@/types/types";
+import {useFocusEffect} from "@react-navigation/native";
 
 export default function Header() {
   const { isDark, toggle } = useContext(ThemeContext);
-  const { signOut } = useContext(AuthContext);
+  const { signOut, username } = useContext(AuthContext);
+  const [profile, setProfile] = useState<Profile | null>();
   const theme = useTheme();
   const segments = useSegments();
   const current = String(segments[segments.length - 1] ?? '');
-  const hideActions = current === 'login' || current === 'index' || current === '';
   const router = useRouter();
   const [menuVisible, setMenuVisible] = React.useState(false);
+
+    const fetchProfile = useCallback(async () => {
+        try {
+            const data = await get_profile();
+            setProfile(data || null);
+        } catch (err: any) {
+            setProfile(null);
+        }
+    }, []);
+
+    useFocusEffect(
+        useCallback(() => {
+            fetchProfile();
+        }, [fetchProfile]),
+    );
 
   return (
     <SafeAreaView
@@ -60,10 +78,7 @@ export default function Header() {
             icon={isDark ? 'white-balance-sunny' : 'weather-night'}
             onPress={() => toggle()}
           />
-
-          {!hideActions && (
-            <>
-              <IconButton
+             <IconButton
                 icon={isDark ? 'bell' : 'bell-outline'}
                 style={{
                   width: 40,
@@ -99,6 +114,43 @@ export default function Header() {
                   />
                 }
               >
+                      <View style={{ paddingHorizontal: 12, paddingVertical: 10, width: 240 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          {profile?.image ? (
+                            <Image
+                              source={{ uri: profile?.image }}
+                              style={{ width: 36, height: 36, borderRadius: 18, marginRight: 12 }}
+                            />
+                          ) : (
+                            <View
+                              style={{
+                                width: 36,
+                                height: 36,
+                                borderRadius: 18,
+                                marginRight: 12,
+                                backgroundColor: theme.colors.primary,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}
+                            >
+                              <Text style={{ color: theme.colors.onPrimary, fontWeight: '700' }}>
+                                {profile?.name ? String(profile.name).charAt(0).toUpperCase() : 'U'}
+                              </Text>
+                            </View>
+                          )}
+
+                          <View style={{ flex: 1 }}>
+                            <Text style={{ color: theme.colors.onSurface, fontWeight: '600' }}>
+                              {profile?.name || 'Utilisateur'}
+                            </Text>
+                            {username ? (
+                              <Text style={{ color: theme.colors.onSurface, opacity: 0.7, fontSize: 12 }}>
+                                @{username}
+                              </Text>
+                            ) : null}
+                          </View>
+                        </View>
+                      </View>
                 <Menu.Item
                   onPress={async () => {
                     setMenuVisible(false);
@@ -108,8 +160,6 @@ export default function Header() {
                 />
                 <Menu.Item title={'Configuration Fay AI'} />
               </Menu>
-            </>
-          )}
         </View>
       </View>
     </SafeAreaView>

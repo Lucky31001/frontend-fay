@@ -24,6 +24,7 @@ export async function request({
     const response = await client(config);
     return response.data;
   } catch (err: any) {
+    console.log('Request error:', err);
     const errorMessage =
       err?.response?.data?.message ||
       err?.response?.data ||
@@ -34,7 +35,7 @@ export async function request({
       const Toast = toastModule && (toastModule.default || toastModule);
       Toast.show({
         type: 'error',
-        text1: errorMessage.error,
+        text1: errorMessage,
       });
     } catch {
       // ignore if toast cannot be shown

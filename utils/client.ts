@@ -9,6 +9,7 @@ console.log('API_BASE_URL used by axios:', API_BASE_URL);
 const client = axios.create({
   baseURL: API_BASE_URL,
   timeout: 10000,
+  validateStatus: (status) => status < 500
 });
 
 client.interceptors.request.use(async (config) => {

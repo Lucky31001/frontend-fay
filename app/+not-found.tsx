@@ -16,7 +16,7 @@ export default function NotFoundScreen() {
         }}
       >
         <Link
-          href="/(tabs)/agenda"
+          href="/login"
           style={{ fontSize: 20, textDecorationLine: 'underline', color: theme.colors.primary }}
         >
           Go back to Home screen!

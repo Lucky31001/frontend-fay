@@ -22,7 +22,7 @@ export default function EventTypeSelector({ value, onChange, showError }: Props)
       (async () => {
         try {
           const data = await get_event_type();
-          const names = (data || []).map((t: any) => t.name).filter(Boolean);
+          const names = (data || []).map((t: any) => t.name);
           if (mounted) setTypes(names);
         } catch {
           if (mounted) setTypes([]);

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, {useContext, useEffect} from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { AuthProvider, AuthContext } from '@/context/AuthContext';
 import { ThemeProvider } from '@/context/ThemeContext';
@@ -19,9 +19,11 @@ export default function RootLayout() {
     );
   }
 
-  if (isAuthenticated) {
-    router.replace('/(tabs)/agenda');
-  }
+    useEffect(() => {
+        if (!loading && isAuthenticated) {
+            router.replace('/(tabs)/agenda');
+        }
+    }, [loading, isAuthenticated]);
 
   return (
     <AuthProvider>
@@ -36,10 +38,9 @@ function LayoutContent() {
   const theme = useTheme();
   return (
     <>
-      <Header />
       <Toast />
       <Stack
-        initialRouteName="index"
+        initialRouteName="login"
         screenOptions={{
           headerShown: false,
           headerStyle: { backgroundColor: theme.colors.surface },

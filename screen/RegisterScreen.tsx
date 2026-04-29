@@ -57,9 +57,11 @@ export default function RegisterScreen() {
         await signIn(data.access_token, data.refresh_token);
       }
       if ( isCreator ) {
-          router.push('/(tabs)/profile');
+          router.push('/profile');
       }
-      router.push('/(tabs)/agenda');
+      else {
+          router.push('/(tabs)/agenda');
+      }
     } catch (err: any) {
       Alert.alert('Erreur', err?.message || "Impossible de s'inscrire");
     } finally {

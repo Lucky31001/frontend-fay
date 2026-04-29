@@ -43,6 +43,7 @@ export default function CreateProfilScreen() {
     const onSubmit = async () => {
         setSubmitted(true);
         if (
+            !image ||
             !name ||
             !location ||
             selectedTypes.length === 0
@@ -76,15 +77,14 @@ export default function CreateProfilScreen() {
                 };
                 data = await create_profile(payload);
             }
-            console.log('Event created:', data);
             if (data) {
                 resetState();
-                Alert.alert('Succès', "L'événement a été créé avec succès");
-                router.push('/(tabs)/aganda');
+                Alert.alert('Succès', "Le profile a été créé avec succès");
+                router.replace('/(tabs)/agenda');
             }
         } catch (err: any) {
             setLoading(false);
-            Alert.alert('Erreur', err?.message || "Impossible de créer l'événement");
+            Alert.alert('Erreur', err?.message || "Impossible de créer le profile");
         }
     };
 
@@ -152,7 +152,7 @@ export default function CreateProfilScreen() {
                             label="Nom"
                             value={name}
                             onChangeText={setName}
-                            placeholder="bal de promo"
+                            placeholder="Jane doe"
                             required
                             showError={submitted}
                         />
@@ -160,7 +160,7 @@ export default function CreateProfilScreen() {
                             label="description"
                             value={description}
                             onChangeText={setDescription}
-                            placeholder="Un événement génial ou il y aura plein de monde"
+                            placeholder="J'adore les fleure et le heavy metal"
                             multiline
                             height={100}
                             showError={submitted}
