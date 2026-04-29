@@ -1,6 +1,9 @@
+import React from 'react';
+import { jest, describe, it, expect, beforeEach, afterEach } from '@jest/globals';
 import { render, waitFor } from '@testing-library/react-native';
 import EventScreen from '@/screen/EventScreen';
 import * as eventService from '@/services/event';
+
 
 jest.mock('@/services/event');
 
@@ -38,7 +41,8 @@ describe('EventScreen', () => {
   });
 });
 
-describe('EventScreen - Get Event Types', () => {
+
+describe('EventScreen EventType', () => {
   beforeEach(() => {
     (eventService.get_event_type as jest.Mock).mockResolvedValue(mockEventTypes);
   });
@@ -47,7 +51,7 @@ describe('EventScreen - Get Event Types', () => {
     jest.clearAllMocks();
   });
 
-  it('fetches event types and returns them correctly', async () => {
+  it('fetches event types and returns them', async () => {
     const result = await eventService.get_event_type();
 
     expect(result).toEqual(mockEventTypes);
@@ -56,7 +60,7 @@ describe('EventScreen - Get Event Types', () => {
   });
 });
 
-describe('EventScreen', () => {
+describe('EventScreen CreateEvent', () => {
   beforeEach(() => {
     (eventService.create_event as jest.Mock).mockResolvedValue([mockEvent]);
   });
