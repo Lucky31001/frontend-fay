@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Alert, Linking} from 'react-native';
+import { View, Text, Alert, Linking } from 'react-native';
 import { useTheme } from 'react-native-paper';
 import { Calendar as RNCalendar } from 'react-native-calendars';
 import * as Calendar from 'expo-calendar';
 
 const isoDate = (d: Date) => d.toISOString().split('T')[0];
 
-export default function CustomCalendar({ value, onChange }: { value?: string, onChange?: (v: string) => void }) {
+export default function CustomCalendar({
+  value,
+  onChange,
+}: {
+  value?: string;
+  onChange?: (v: string) => void;
+}) {
   const theme = useTheme();
   const [selectedDate, setSelectedDate] = useState(value?.split('T')[0] || isoDate(new Date()));
   const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -20,15 +26,15 @@ export default function CustomCalendar({ value, onChange }: { value?: string, on
     if (status === 'granted') return true;
 
     Alert.alert(
-      "Permission requise",
+      'Permission requise',
       "L'accès au calendrier est nécessaire pour voir vos rendez-vous. Voulez-vous l'activer dans les réglages ?",
       [
-        { text: "Annuler", style: "cancel" },
-        { 
-          text: "Ouvrir les réglages", 
-          onPress: () => Linking.openSettings()
-        }
-      ]
+        { text: 'Annuler', style: 'cancel' },
+        {
+          text: 'Ouvrir les réglages',
+          onPress: () => Linking.openSettings(),
+        },
+      ],
     );
     return false;
   };
@@ -37,7 +43,7 @@ export default function CustomCalendar({ value, onChange }: { value?: string, on
   useEffect(() => {
     (async () => {
       const { status } = await Calendar.requestCalendarPermissionsAsync();
-      
+
       if (status !== 'granted') {
         const ok = await requestCalendarAccess();
         if (!ok) return;
@@ -45,51 +51,61 @@ export default function CustomCalendar({ value, onChange }: { value?: string, on
 
       try {
         const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
-        const ids = calendars.map(c => c.id);
+        const ids = calendars.map((c) => c.id);
         const start_date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-        const end_date = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0, 23, 59, 59);
+        const end_date = new Date(
+          currentMonth.getFullYear(),
+          currentMonth.getMonth() + 1,
+          0,
+          23,
+          59,
+          59,
+        );
 
         const events = await Calendar.getEventsAsync(ids, start_date, end_date);
         setAllEvents(events);
-        
+
         const marks: Record<string, any> = {};
-        events.forEach(ev => {
+        events.forEach((ev) => {
           marks[isoDate(new Date(ev.startDate))] = { marked: true, dotColor: 'red' };
         });
 
-        marks[selectedDate] = { 
-          ...marks[selectedDate], 
-          selected: true, 
-          selectedColor: theme.colors.primary 
+        marks[selectedDate] = {
+          ...marks[selectedDate],
+          selected: true,
+          selectedColor: theme.colors.primary,
         };
 
         setMarkedDates(marks);
       } catch (e) {
-        console.log("Erreur :", e);
+        console.log('Erreur :', e);
       }
     })();
   }, [currentMonth, selectedDate]);
 
   // Filtrage des événements pour la date sélectionnée
-  const dayEvents = allEvents.filter(ev => isoDate(new Date(ev.startDate)) === selectedDate);
+  const dayEvents = allEvents.filter((ev) => isoDate(new Date(ev.startDate)) === selectedDate);
 
   return (
     <View style={{ backgroundColor: theme.colors.background, padding: 10 }}>
       <RNCalendar
         current={isoDate(currentMonth)}
-        onDayPress={(day) =>
-        {
+        onDayPress={(day) => {
           onChange?.(day.dateString);
-          setSelectedDate(day.dateString)
-        }
-      }
+          setSelectedDate(day.dateString);
+        }}
         onMonthChange={(month) => setCurrentMonth(new Date(month.year, month.month - 1, 1))}
         markedDates={markedDates}
-        theme={{ 
-          calendarBackground: 'transparent', 
-          dayTextColor: theme.colors.onSurface,
+        theme={{
+          calendarBackground: 'transparent',
+          dayTextColor: theme.colors.outline,
+          textDisabledColor: theme.colors.outline,
+          textSectionTitleColor: theme.colors.primary,
+          arrowColor: theme.colors.primary,
+          monthTextColor: theme.colors.primary,
           selectedDayBackgroundColor: theme.colors.primary,
-          todayTextColor: theme.colors.primary 
+          todayTextColor: theme.colors.primary,
+          selectedDayTextColor: theme.colors.onPrimary,
         }}
       />
 
@@ -99,10 +115,23 @@ export default function CustomCalendar({ value, onChange }: { value?: string, on
 
       {dayEvents.length > 0 ? (
         dayEvents.map((ev, i) => (
-          <View key={i} style={{ padding: 10, backgroundColor: theme.colors.surfaceVariant, marginTop: 8, borderRadius: 8 }}>
+          <View
+            key={i}
+            style={{
+              padding: 10,
+              backgroundColor: theme.colors.surfaceVariant,
+              marginTop: 8,
+              borderRadius: 8,
+            }}
+          >
             <Text style={{ fontWeight: 'bold' }}>{ev.title}</Text>
             <Text style={{ fontSize: 12 }}>
-                {ev.allDay ? "Journée entière" : new Date(ev.startDate).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+              {ev.allDay
+                ? 'Journée entière'
+                : new Date(ev.startDate).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
             </Text>
           </View>
         ))
