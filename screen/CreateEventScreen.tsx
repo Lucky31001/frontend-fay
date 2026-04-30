@@ -30,7 +30,7 @@ export default function CreateEventScreen() {
   const [link, setLink] = useState('');
   const [description, setDescription] = useState('');
   const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
-  const [date, setDate] = useState<string | null>(null);
+  const [date, setDate] = useState<string | undefined>(undefined);
   const [note, setNote] = useState('');
   const [capacity, setCapacity] = useState('');
   const [loading, setLoading] = useState(false);
@@ -47,7 +47,7 @@ export default function CreateEventScreen() {
     setSelectedTypes([]);
     setNote('');
     setCapacity('');
-    setDate(null);
+    setDate(undefined);
     setSubmitted(false);
     setLoading(false);
   };

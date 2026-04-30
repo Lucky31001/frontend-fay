@@ -77,7 +77,12 @@ export default function CustomCalendar({ value, onChange }: { value?: string, on
     <View style={{ backgroundColor: theme.colors.background, padding: 10 }}>
       <RNCalendar
         current={isoDate(currentMonth)}
-        onDayPress={(day) => setSelectedDate(day.dateString)}
+        onDayPress={(day) =>
+        {
+          onChange?.(day.dateString);
+          setSelectedDate(day.dateString)
+        }
+      }
         onMonthChange={(month) => setCurrentMonth(new Date(month.year, month.month - 1, 1))}
         markedDates={markedDates}
         theme={{ 

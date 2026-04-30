@@ -42,7 +42,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="agenda"
           options={{
-            title: 'Aganda',
+            title: 'Agenda',
             tabBarIcon: ({ color, focused }) => (
               <Ionicons
                 name={focused ? 'calendar-sharp' : 'calendar-outline'}
