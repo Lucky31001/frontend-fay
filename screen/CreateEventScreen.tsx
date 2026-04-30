@@ -260,6 +260,7 @@ export default function CreateEventScreen() {
               Champs nécessaire : *
             </Text>
             <Pressable
+              testID="button-submit"
               onPress={onSubmit}
               disabled={loading}
               accessibilityRole="button"
