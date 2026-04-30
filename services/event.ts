@@ -2,6 +2,7 @@ import { requestGet, requestPost } from '@/utils/http';
 import { API_URL } from '@/constant/urls';
 import { Event, EventType } from '@/types/types';
 
+// A service who manages the retrieving of all the events on the dedicated endpoint
 export const get_event = async (): Promise<Event[]> => {
   return await requestGet(API_URL.EVENT);
 };

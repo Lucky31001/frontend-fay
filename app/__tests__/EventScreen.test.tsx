@@ -77,6 +77,7 @@ jest.mock('@/components/CustomCalendar', () => {
   return MockCustomCalendar;
 });
 
+// Sample event for the tests
 const mockEvent = {
   id: 1,
   name: 'Soirée Test',
@@ -84,19 +85,23 @@ const mockEvent = {
   price: 10,
 };
 
-
+// Test for the display of events in page "List"
 describe('EventScreen - Display events', () => {
+  // Mocks the function that fetches the events, and mocks its response (the sample event) before each test
   beforeEach(() => {
     (eventService.get_event as jest.Mock).mockResolvedValue([mockEvent]);
   });
 
+  // Then deletes the mocks when the test is done
   afterEach(() => {
     jest.clearAllMocks();
   });
 
+  // The test itself
   it('fetches events and displays them', async () => {
-    const { getByText } = render(<EventScreen />);
+    const { getByText } = render(<EventScreen />); // Mount the component (empty) and get a util to find an element by its text
 
+    // Wait for get_event to fetch the events (the sample event in this case) then checks if the events data are in the component
     await waitFor(() => expect(getByText('Soirée Test')).toBeTruthy());
     expect(getByText('Paris')).toBeTruthy();
     expect(getByText('10€')).toBeTruthy();
