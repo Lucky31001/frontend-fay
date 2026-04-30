@@ -8,9 +8,9 @@ import * as eventService from '@/services/event';
 
 jest.mock('@/services/event');
 
-const mockPush = jest.fn();
+const mockRedirect = jest.fn();
 jest.mock('expo-router', () => ({
-  useRouter: () => ({ push: mockPush }),
+  useRouter: () => ({ push: mockRedirect }),
 }));
 
 jest.mock('expo-image-picker', () => ({
@@ -106,6 +106,8 @@ describe('EventScreen - Display events', () => {
 
 
 describe('CreateEventScreen - Create event', () => {
+
+  // Simulation of a successful API response when a new event is created
   beforeEach(() => {
     (eventService.create_event as jest.Mock).mockResolvedValue(mockEvent);
     jest.spyOn(Alert, 'alert');
@@ -115,7 +117,7 @@ describe('CreateEventScreen - Create event', () => {
     jest.clearAllMocks();
   });
 
-  it('does not submit when required fields are empty', () => {
+  it('Dont submit when required field are empty', () => {
     const { getByTestId } = render(<CreateEventScreen />);
 
     fireEvent.press(getByTestId('button-submit'));
@@ -126,6 +128,7 @@ describe('CreateEventScreen - Create event', () => {
   it('fills all required fields and submits successfully', async () => {
     const { getByTestId } = render(<CreateEventScreen />);
 
+    // Fill in the text fields using the test Ids created in the mocks
     fireEvent.changeText(getByTestId('input-nom'), 'Soirée Test');
     fireEvent.changeText(getByTestId('input-location'), 'Paris');
     fireEvent.changeText(getByTestId('input-prix'), '10');
@@ -140,6 +143,7 @@ describe('CreateEventScreen - Create event', () => {
       expect(eventService.create_event).toHaveBeenCalledTimes(1);
     });
 
+    // Confirm the service received the exact data from the form
     expect(eventService.create_event).toHaveBeenCalledWith(
       expect.objectContaining({
         name: 'Soirée Test',
@@ -153,9 +157,10 @@ describe('CreateEventScreen - Create event', () => {
     );
 
     expect(Alert.alert).toHaveBeenCalledWith('Succès', "L'événement a été créé avec succès");
-    expect(mockPush).toHaveBeenCalledWith('/(tabs)/event');
+    expect(mockRedirect).toHaveBeenCalledWith('/(tabs)/event');
   });
 
+  // Force the mock to fail test the catch block
   it('shows error alert when creation fails', async () => {
     (eventService.create_event as jest.Mock).mockRejectedValue(
       new Error('Erreur serveur')
@@ -177,6 +182,6 @@ describe('CreateEventScreen - Create event', () => {
       expect(Alert.alert).toHaveBeenCalledWith('Erreur', 'Erreur serveur');
     });
 
-    expect(mockPush).not.toHaveBeenCalled();
+    expect(mockRedirect).not.toHaveBeenCalled();
   });
 });
