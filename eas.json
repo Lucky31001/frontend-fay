@@ -9,11 +9,7 @@
       "distribution": "internal"
     },
     "preview": {
-      "distribution": "internal",
-      "env": {
-        "API_BASE_URL": "http://localhost:8000",
-        "SCHEME": "fay"
-      }
+      "distribution": "internal"
     },
     "production": {
       "autoIncrement": true
