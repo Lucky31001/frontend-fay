@@ -17,7 +17,9 @@ loadEnv();
 const expo = (appJson && appJson.expo) || {};
 // Ensure EAS projectId is present when linking this repo to EAS (can be overridden by env)
 const easProjectId =
-  process.env.EAS_PROJECT_ID || (expo.extra && expo.extra.eas && expo.extra.eas.projectId) || null;
+    process.env.EAS_PROJECT_ID ||
+    (expo.extra && expo.extra.eas && expo.extra.eas.projectId) ||
+    "b403d13b-3571-44b9-8ecd-0120568faac0";
 
 // Build the extra object, preserving any existing extras but ensuring API base URL and eas.projectId
 const extra = {
