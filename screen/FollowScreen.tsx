@@ -41,7 +41,7 @@ export default function FollowScreen() {
 
   return (
     <View style={{ flex: 1, padding: 20, backgroundColor: theme.colors.background }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 5 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginBottom: 16 }}>
         <Ionicons name={'musical-notes-outline'} color={COLOR.BLUE} size={24} />
         <Text style={{ marginLeft: 8, fontSize: 16, fontWeight: '500', color: theme.colors.onSurface }}>Artistes à découvrir</Text>
       </View>
