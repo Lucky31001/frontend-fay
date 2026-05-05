@@ -24,7 +24,7 @@ const easProjectId =
 // Build the extra object, preserving any existing extras but ensuring API base URL and eas.projectId
 const extra = {
   ...(expo.extra || {}),
-  API_BASE_URL: process.env.API_BASE_URL || 'http://192.168.1.22:8000',
+  API_BASE_URL: process.env.API_BASE_URL || 'https://backend-fay.onrender.com',
   eas: {
     ...(expo.extra && expo.extra.eas ? expo.extra.eas : {}),
     projectId: easProjectId,

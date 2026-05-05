@@ -60,10 +60,6 @@ jobs:
           EAS_PROJECT_ID: ${{ secrets.EAS_PROJECT_ID }}
         run: |
           echo "Starting EAS build - profile: preview (android)"
-          echo "EAS_PROJECT_ID: $EAS_PROJECT_ID"
-          echo "API_BASE_URL: $API_BASE_URL"
-          echo "SCHEME: $SCHEME"
-          echo "EXPO_TOKEN: $EXPO_TOKEN"
           eas build -p android --profile preview --non-interactive
 
   eas-production-build:
