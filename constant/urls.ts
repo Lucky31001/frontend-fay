@@ -4,5 +4,6 @@ export const API_URL = {
   TOKEN_REFRESH: '/api/token/refresh/',
   EVENT: '/api/event/',
   EVENT_TYPE: '/api/event-types/',
-  PROFILE: '/api/profile/'
+  PROFILE: '/api/profile/',
+  PROFILES: '/api/profiles/'
 };
