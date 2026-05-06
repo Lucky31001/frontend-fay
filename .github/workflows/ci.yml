@@ -85,4 +85,5 @@ jobs:
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
           SCHEME: "fay"
           EAS_PROJECT_ID: ${{ secrets.EAS_PROJECT_ID }}
+          EAS_BUILD_NO_EXPO_GO_WARNING: "true"
         run: eas build -p android --profile production --non-interactive
