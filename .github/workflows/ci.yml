@@ -85,4 +85,4 @@ jobs:
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
           SCHEME: "fay"
           EAS_PROJECT_ID: ${{ secrets.EAS_PROJECT_ID }}
-        run: eas build -p all --profile production --non-interactive
+        run: eas build -p android --profile production --non-interactive
