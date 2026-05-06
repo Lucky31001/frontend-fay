@@ -6,14 +6,13 @@ import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
 import { get_event } from '@/services/event';
 import { Event } from '@/types/types';
+import EventDetailsModal from '@/components/EventDetailsModal';
 
-// Petit composant utilitaire pour gérer le géocodage d'un seul événement
-const EventMarker = ({ event }: { event: Event }) => {
+const EventMarker = ({ event, onPress }: { event: Event, onPress: (e: Event) => void }) => {
   const [coords, setCoords] = useState<{ latitude: number, longitude: number } | null>(null);
 
   useEffect(() => {
     (async () => {
-      // On transforme l'adresse en coordonnées
       const result = await Location.geocodeAsync(event.location);
       if (result.length > 0) {
         setCoords({
@@ -24,16 +23,18 @@ const EventMarker = ({ event }: { event: Event }) => {
     })();
   }, [event.location]);
 
-  if (!coords) return null; // Ne rien afficher tant qu'on n'a pas les coordonnées
+  if (!coords) return null;
 
   return (
     <Marker 
       coordinate={coords} 
       title={event.name} 
-      description={event.location}
+      onPress={(e) => {
+        e.stopPropagation();
+        onPress(event);
+      }}
     >
-        {/* Icône différente pour les événements (ex: une épingle) */}
-        <Ionicons name="location" size={30} color="red" />
+      <Ionicons name="location" size={30} color="red" />
     </Marker>
   );
 };
@@ -42,9 +43,9 @@ export default function MapScreenNative() {
   const [location, setLocation] = useState<Location.LocationObjectCoords | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [events, setEvents] = useState<Event[]>([]);
+  const [selected, setSelected] = useState<Event | null>(null);
   const theme = useTheme();
 
-  // 1. Récupérer les événements
   useEffect(() => {
     const fetchEvents = async () => {
         const data = await get_event();
@@ -53,7 +54,6 @@ export default function MapScreenNative() {
     fetchEvents();
   }, []);
 
-  // 2. Gestion de la localisation utilisateur (ton code actuel)
   useEffect(() => {
     let mounted = true;
     (async () => {
@@ -89,16 +89,23 @@ export default function MapScreenNative() {
           longitudeDelta: 0.0421,
         }}
       >
-        {/* Ton marqueur "Moi" */}
         <Marker coordinate={location} anchor={{ x: 0.5, y: 1 }}>
           <Ionicons name="man-outline" size={32} color="yellow" />
         </Marker>
 
-        {/* 3. Affichage des marqueurs d'événements */}
         {events.map((event, index) => (
-          <EventMarker key={event.id || index} event={event} />
+          <EventMarker 
+            key={event.id || index} 
+            event={event} 
+            onPress={(ev) => setSelected(ev)} 
+          />
         ))}
       </MapView>
+      <EventDetailsModal 
+        visible={!!selected} 
+        event={selected} 
+        onClose={() => setSelected(null)} 
+      />
     </View>
   );
 }
