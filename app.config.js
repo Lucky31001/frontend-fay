@@ -54,6 +54,9 @@ module.exports = {
       ...(expo.ios || {}),
       bundleIdentifier: iosBundleId,
       buildNumber: iosBuildNumber,
+      infoPlist: {
+        ITSAppUsesNonExemptEncryption: false,
+      },
     },
     extra,
   },
