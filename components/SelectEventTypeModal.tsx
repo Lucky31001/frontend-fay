@@ -48,7 +48,7 @@ export default function SelectEventTypeModal({ visible, onClose, onSelect }: Pro
 
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose}>
-      <View style={{ flex: 1, backgroundColor: theme.colors.background, padding: 16 }}>
+      <View style={{ flex: 1, backgroundColor: theme.colors.background, padding: 16, marginTop: 32 }}>
         
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
           <Text style={{ fontSize: 20, fontWeight: 'bold', color: theme.colors.onSurface }}>

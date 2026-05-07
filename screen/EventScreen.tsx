@@ -68,7 +68,7 @@ export default function EventScreen() {
 
   return (
     <>
-      <View style={{ flex: 1, backgroundColor: theme.colors.background, padding: 16, marginTop: 32 }}>
+      <View style={{ flex: 1, backgroundColor: theme.colors.background, padding: 16 }}>
         
         <View style={{ 
           flexDirection: 'row', 
