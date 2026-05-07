@@ -7,9 +7,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { get_event } from '@/services/event';
 import { Event } from '@/types/types';
 import EventDetailsModal from '@/components/EventDetailsModal';
+import { useFocusEffect } from '@react-navigation/native';
 
-const EventMarker = ({ event, onPress }: { event: Event, onPress: (e: Event) => void }) => {
-  const [coords, setCoords] = useState<{ latitude: number, longitude: number } | null>(null);
+const EventMarker = ({ event, onPress }: { event: Event; onPress: (e: Event) => void }) => {
+  const [coords, setCoords] = useState<{ latitude: number; longitude: number } | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -26,9 +27,9 @@ const EventMarker = ({ event, onPress }: { event: Event, onPress: (e: Event) => 
   if (!coords) return null;
 
   return (
-    <Marker 
-      coordinate={coords} 
-      title={event.name} 
+    <Marker
+      coordinate={coords}
+      title={event.name}
       onPress={(e) => {
         e.stopPropagation();
         onPress(event);
@@ -46,10 +47,24 @@ export default function MapScreenNative() {
   const [selected, setSelected] = useState<Event | null>(null);
   const theme = useTheme();
 
-  useEffect(() => {
-    const fetchEvents = async () => {
+  useFocusEffect(
+    useCallback(() => {
+      const fetchEvents = async () => {
         const data = await get_event();
         setEvents(data || []);
+      };
+
+      fetchEvents();
+
+      return () => {
+      };
+    }, []),
+  );
+
+  useEffect(() => {
+    const fetchEvents = async () => {
+      const data = await get_event();
+      setEvents(data || []);
     };
     fetchEvents();
   }, []);
@@ -64,15 +79,27 @@ export default function MapScreenNative() {
       }
       const sub = await Location.watchPositionAsync(
         { accuracy: Location.Accuracy.High, distanceInterval: 5 },
-        (loc) => { if (mounted) setLocation(loc.coords); }
+        (loc) => {
+          if (mounted) setLocation(loc.coords);
+        },
       );
-      return () => { mounted = false; sub.remove(); };
+      return () => {
+        mounted = false;
+        sub.remove();
+      };
     })();
   }, []);
 
   if (errorMsg || !location) {
     return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.background }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: 'center',
+          alignItems: 'center',
+          backgroundColor: theme.colors.background,
+        }}
+      >
         <ActivityIndicator size="large" color={theme.colors.primary} />
       </View>
     );
@@ -94,18 +121,10 @@ export default function MapScreenNative() {
         </Marker>
 
         {events.map((event, index) => (
-          <EventMarker 
-            key={event.id || index} 
-            event={event} 
-            onPress={(ev) => setSelected(ev)} 
-          />
+          <EventMarker key={event.id || index} event={event} onPress={(ev) => setSelected(ev)} />
         ))}
       </MapView>
-      <EventDetailsModal 
-        visible={!!selected} 
-        event={selected} 
-        onClose={() => setSelected(null)} 
-      />
+      <EventDetailsModal visible={!!selected} event={selected} onClose={() => setSelected(null)} />
     </View>
   );
 }
