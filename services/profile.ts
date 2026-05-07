@@ -13,3 +13,7 @@ export const get_profile = async (id?: number, headers?: Record<string, any>): P
         return await requestGet(API_URL.PROFILE, null, headers);
     }
 }
+
+export const get_profiles = async (headers?: Record<string, any>): Promise<Profile[]> => {
+    return await requestGet(API_URL.PROFILES, null, headers);
+};
