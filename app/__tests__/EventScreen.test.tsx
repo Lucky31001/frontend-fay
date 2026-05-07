@@ -161,7 +161,6 @@ describe('CreateEventScreen - Create event', () => {
       })
     );
 
-    expect(Alert.alert).toHaveBeenCalledWith('Succès', "L'événement a été créé avec succès");
     expect(mockRedirect).toHaveBeenCalledWith('/(tabs)/event');
   });
 

@@ -156,7 +156,7 @@ export default function Header() {
                   }}
                   title="Log Out"
                 />
-                <Menu.Item title={'Configuration Fay AI'} />
+                  {/* <Menu.Item title={'Configuration Fay AI'} /> */}
               </Menu>
         </View>
       </View>

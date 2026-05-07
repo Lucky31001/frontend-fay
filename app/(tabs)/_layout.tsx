@@ -17,7 +17,7 @@ export default function TabLayout() {
           headerShown: false,
         }}
       >
-        <Tabs.Screen
+        {/* <Tabs.Screen
           name="vibe"
           options={{
             title: 'Vibe',
@@ -29,7 +29,7 @@ export default function TabLayout() {
               />
             ),
           }}
-        />
+        /> */}
         <Tabs.Screen
           name="follow"
           options={{
