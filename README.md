@@ -1,196 +1,158 @@
-# FAY — Application mobile (Expo)
+# FAY Frontend — Manuel développeur
 
-Ce dépôt contient l'application mobile "FAY" développée avec Expo et React Native (router Expo). Ce README donne les instructions essentielles pour installer, lancer et contribuer au projet.
+> Documentation orientée **GitBook** pour l’installation, l’exécution et la contribution au projet frontend mobile FAY.
 
-## Prérequis
+## Sommaire
 
-- Node.js (14.x+ recommandé)
+- [1. Vue d’ensemble](#1-vue-densemble)
+- [2. Stack technique](#2-stack-technique)
+- [3. Prérequis](#3-prérequis)
+- [4. Installation](#4-installation)
+- [5. Lancement en local](#5-lancement-en-local)
+- [6. Scripts disponibles](#6-scripts-disponibles)
+- [7. Configuration et variables d’environnement](#7-configuration-et-variables-denvironnement)
+- [8. Structure du projet](#8-structure-du-projet)
+- [9. Qualité (lint/tests)](#9-qualité-linttests)
+- [10. Workflow de contribution](#10-workflow-de-contribution)
+- [11. CI](#11-ci)
+- [12. Dépannage rapide](#12-dépannage-rapide)
+- [13. Ressources](#13-ressources)
+
+---
+
+## 1. Vue d’ensemble
+
+Ce dépôt contient l’application mobile **FAY** développée avec **Expo**, **React Native** et **Expo Router**.
+
+Objectif de ce document : fournir un **manuel d’utilisation pour développeur** (onboarding + maintenance quotidienne).
+
+## 2. Stack technique
+
+- Expo SDK 54
+- React Native 0.81
+- React 19
+- TypeScript
+- Expo Router
+- Jest + Testing Library React Native
+- ESLint + Prettier
+
+## 3. Prérequis
+
+- Node.js 20 recommandé (aligné CI)
 - npm
-- Expo CLI est optionnel (nous utilisons `npx expo` dans les scripts)
-- Un émulateur Android/iOS ou l'application Expo Go pour tester sur un appareil
+- Émulateur Android/iOS ou Expo Go sur appareil
 
-Remarque sur les dépendances natives
+## 4. Installation
 
-- Certaines fonctionnalités utilisent des modules natifs/expo :
-  - `@react-native-community/datetimepicker` (sélecteur d'heure natif)
-  - `expo-image-picker` (sélection d'image depuis la galerie)
-  - `expo-image-manipulator` (recadrage/redimensionnement côté client)
-  - `expo-location` (géolocalisation + reverse-geocode)
-  - `react-native-toast-message` (toasts globaux)
+```bash
+npm install
+```
 
-## Installation
+## 5. Lancement en local
 
-1. Installer les dépendances :
+```bash
+npm start
+```
 
-   ```bash
-   npm install
-   ```
+Autres cibles :
 
-2. Lancer l'application en développement :
+```bash
+npm run android
+npm run ios
+npm run web
+```
 
-   ```bash
-   npm start
-   # ou
-   npx expo start
-   ```
+## 6. Scripts disponibles
 
-   Pour démarrer directement sur un appareil/émulateur :
+- `npm start` : démarre Expo (avec cache reset)
+- `npm run android` : lance l’app sur Android
+- `npm run ios` : lance l’app sur iOS (macOS)
+- `npm run web` : lance la version web
+- `npm test` : lance Jest
+- `npm run test:watch` : tests en watch mode
+- `npm run lint` : lint ESLint
+- `npm run format` : formatage Prettier
 
-   ```bash
-   npm run android
-   npm run ios
-   npm run web
-   ```
+## 7. Configuration et variables d’environnement
 
-## Scripts utiles (dans `package.json`)
+Le projet utilise `app.config.js` + `.env`.
 
-- `npm start` — démarre le serveur Expo
-- `npm run android` — démarre Expo et ouvre un appareil Android (émulateur ou appareil connecté)
-- `npm run ios` — démarre Expo et ouvre un simulateur iOS (macOS seulement)
-- `npm run web` — lance la version web
-- `npm test` — lance la suite de tests (Jest)
-- `npm run test:watch` — exécute les tests en mode watch
-- `npm run lint` — exécute ESLint sur le projet
-- `npm run format` — formate le code avec Prettier
-- `npm run reset-project` — script utilitaire fourni qui réinitialise la structure (fourni par le template)
+Variable principale :
 
-## Structure du projet (points principaux)
+- `API_BASE_URL` : URL de base de l’API (exposée via `expo.extra.API_BASE_URL`)
 
-- `app/` — code des écrans et routes (file-based routing d'Expo Router)
-  - `index.tsx` — point d'entrée des écrans
-  - `login.tsx`, `RegisterScreen`, etc. — écrans principaux
-- `components/` — composants réutilisables
-- `screen/` — écrans non-routés (utilisés par l'app)
-- `services/` — appels réseau / services (ex : `auth.ts`, `event.ts`)
-- `context/` — context React (ex : `AuthContext.tsx`)
-- `utils/` — utilitaires et client HTTP
-- `assets/` — images et ressources statiques
-- `types/` — types TypeScript partagés
-
-  Remarque : le projet utilise TypeScript. Le fichier `tsconfig.json` est fourni.
-
-## Configuration et variables d'environnement
-
-Les appels réseau utilisent les services dans `services/`. Si l'application consomme une API distante, définissez l'URL de l'API dans `constant/urls.ts` ou via une approche d'environnement si vous préférez.
-
-Configuration dynamique
-
-Cette application utilise désormais un fichier de configuration dynamique `app.config.js` qui lit les variables d'environnement depuis un fichier `.env` (via `dotenv`) et construit la configuration Expo au runtime. Par défaut la variable la plus importante est :
-
-- `API_BASE_URL` — URL de base de l'API (ex. `http://localhost:8000` ou une URL locale de réseau). Elle est exposée sous `expo.extra.API_BASE_URL` pour être accessible depuis l'application.
-
-Exemples :
-
-Créer un fichier `.env` à la racine :
+Exemple `.env` :
 
 ```bash
 API_BASE_URL=https://api.example.com
 ```
 
-Puis démarrer l'app normalement :
+> Note : `app.json` a été renommé en `app.json.bak` pour éviter un conflit avec la config dynamique.
 
-```bash
-npm start
-# ou
-npx expo start
-```
+## 8. Structure du projet
 
-Notes concernant `app.json`
+- `app/` : routes et écrans (Expo Router)
+- `components/` : composants UI réutilisables
+- `screen/` : écrans métier
+- `services/` : appels API (auth, events, profile, follow)
+- `context/` : contextes React (auth, thème)
+- `utils/` : client HTTP, stockage, helpers
+- `constant/` : constantes globales
+- `types/` : types TypeScript
+- `assets/` : ressources statiques
 
-Pour éviter les conflits entre une config statique (`app.json`) et la config dynamique, le dépôt a renommé temporairement `app.json` en `app.json.bak`.
+## 9. Qualité (lint/tests)
 
-Fonctionnalités importantes
-
-- Sélecteur de date/heure : le composant `CustomCalendar` permet de choisir la date et l'heure (utilise le picker natif pour l'heure).
-- Localisation : `LocationPicker` propose l'autocompletion d'adresses via Nominatim (OpenStreetMap) et un bouton "Utiliser ma position" (reverse-geocode via `expo-location`).
-- Upload d'images : l'écran de création d'événement permet de choisir une image depuis la galerie, elle est recadrée et redimensionnée côté client pour correspondre au rendu des cartes (utilise `expo-image-manipulator`).
-- Liste d'événements : l'écran liste ouvre un modal de détail (`EventDetailsModal`) quand on tape un événement (image, types overlay, date, lieu, note, prix, bouton pour ouvrir dans Maps).
-- Toasts : les erreurs réseau et messages utilisateur s'affichent via `react-native-toast-message`.
-
-Note : l'autocomplétion d'adresse utilise Nominatim (gratuit). Si vous préférez Google Places, une intégration peut être ajoutée mais nécessite une clé API et restrictions d'usage.
-
-## Tests
-
-Ce projet utilise Jest et `@testing-library/react-native`. J'ai ajouté des mocks utiles dans `jest.setup.js` (mock des services, storage, `expo-calendar`, `Ionicons`, `DateTimePicker`) pour rendre les tests stables et rapides.
-
-Commandes générales :
-
-```bash
-npm test
-```
-
-Lancer les tests en mode watch :
-
-```bash
-npm run test:watch
-```
-
-Lancer uniquement les tests d'un dossier ou d'un pattern :
-
-```bash
-npm test -- --testPathPattern=app/__tests__
-```
-
-Conseils pour écrire des tests UI :
-
-- Utilise `findBy*` (async) si le composant fait des mises à jour d'état asynchrones au montage.
-- Mocke les modules natifs ou réseau (ex : `expo-calendar`, `expo-secure-store`, services réseau) dans `jest.setup.js` pour éviter effets de bord.
-
-## Linting & Format
-
-- Linter : ESLint
-- Formatteur : Prettier
-
-Pour vérifier le lint :
+Lint :
 
 ```bash
 npm run lint
 ```
 
-Pour formater le code :
+Tests :
 
 ```bash
-npm run format
+npm test
 ```
 
-## Développement & bonnes pratiques
+CI utilise aussi :
 
-- Respecter les conventions TypeScript et garder les composants petits et testables.
-- Placer la logique réseau dans `services/` et l'état global dans `context/`.
-- Ajouter des tests pour les composants critiques (écrans d'authentification, flux d'événement, etc.).
+```bash
+npx expo-doctor
+```
 
-Tips pour le développement local
+## 10. Workflow de contribution
 
-- Si vous modifiez des dépendances natives, redémarrez Metro avec :
+1. Créer une branche feature/fix
+2. Faire les changements ciblés
+3. Vérifier lint + tests
+4. Ouvrir une Pull Request claire
+
+## 11. CI
+
+Le workflow GitHub Actions (`.github/workflows/ci.yml`) exécute :
+
+1. `npm ci`
+2. `npx expo-doctor` (non bloquant)
+3. `npm run lint`
+4. `npx jest --runInBand --colors --verbose`
+
+## 12. Dépannage rapide
+
+- Problème cache Metro :
 
 ```bash
 npx expo start -c
 ```
 
-- Pour tester l'accès à la galerie et à la localisation, testez sur un appareil physique ou un émulateur qui supporte ces permissions.
+- Problèmes de permissions (galerie/localisation) : tester sur appareil réel ou émulateur correctement configuré.
 
-- Formattage décimal : les champs `Prix` et `Note` acceptent la virgule comme séparateur décimal dans l'UI (ex. `10,50`). Avant envoi au backend ces valeurs sont normalisées (`,` -> `.`).
-
-## Déploiement
-
-Pour publier en production, créez un build Expo (via EAS ou `expo build` selon votre configuration).
-
-## Contribution
-
-1. Forker le dépôt et créer une branche feature/bugfix
-2. Ouvrir une Pull Request décrivant les changements
-3. Ajouter des tests pour les modifications critiques
-
-## Ressources
+## 13. Ressources
 
 - Expo : https://expo.dev
 - Expo Router : https://expo.dev/router
 - React Native : https://reactnative.dev
-- TypeScript : https://www.typescriptlang.org
 - Jest : https://jestjs.io
-- React Testing Library : https://testing-library.com/docs/react-native-testing-library/intro
+- Testing Library RN : https://testing-library.com/docs/react-native-testing-library/intro
 - ESLint : https://eslint.org
 - Prettier : https://prettier.io
-- Axios : https://axios-http.com
-- Ionicons : https://ionic.io/ionicons
-- Nominatim : https://nominatim.org/release-docs/latest/api/Search/
